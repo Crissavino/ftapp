@@ -33,6 +33,9 @@ dependencies:
   flutter_bloc: ^6.0.1
   bloc: ^6.0.1
   equatable: ^1.2.5
+  getwidget: ^1.2.4
+  geolocator: ^6.1.13
+  uuid: ^2.2.2
 
 dev_dependencies:
   flutter_test:
@@ -57,7 +60,8 @@ flutter:
     - assets/profile_cs.jpg
     - assets/logos/facebook.jpg
     - assets/logos/google.jpg
-  #   - images/a_dot_ham.jpeg
+    - assets/icons/primary/
+    - assets/icons/secondary/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -4,6 +4,7 @@ import 'package:app/bloc/register/register_bloc.dart';
 import 'package:app/routes.dart';
 import 'package:app/ui/auth/login_screen.dart';
 import 'package:app/ui/matches/matches_screen.dart';
+import 'package:app/ui/play_now/play_now_screen.dart';
 import 'package:app/ui/profiles/complete_profile_screen.dart';
 import 'package:app/ui/widgets/main_container.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         routes: routes,
-        home: MatchesScreen(),
+        home: CompleteProfileScreen(),
         // home: CheckAuth(),
       ),
     );
