@@ -10,3 +10,7 @@ class ProfileCompleteLoadingState extends CompleteProfileState {}
 class ProfileCompletedState extends CompleteProfileState {}
 
 class ProfileCompleteErrorState extends CompleteProfileState {}
+
+class ProfileCompleteLoadingUserLocationState extends CompleteProfileState {}
+
+class ProfileCompleteUserLocationLoadedState extends CompleteProfileState {}

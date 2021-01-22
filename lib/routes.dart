@@ -6,7 +6,6 @@ import 'package:app/ui/play_now/play_now_screen.dart';
 import 'package:app/ui/profiles/complete_profile_screen.dart';
 import 'package:app/ui/profiles/profile_screen.dart';
 import 'package:app/ui/profiles/public_profile_screen.dart';
-import 'package:app/ui/widgets/main_container.dart';
 
 final routes = {
   'login': (_) => LoginScreen(),

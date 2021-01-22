@@ -147,33 +147,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildRememberMeCheckbox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value;
-                });
-              },
-            ),
-          ),
-          Text(
-            translations[localeName]['rememberMe'],
-            style: kLabelStyle,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildLoginBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -237,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (res.containsKey('success') && res['success'] == true) {
       User user = res['user'];
       if (user.isFullySet) {
-        Navigator.pushReplacementNamed(context, 'home');
+        Navigator.pushReplacementNamed(context, 'matches');
       } else {
         Navigator.pushReplacementNamed(context, 'complete_profile');
       }
@@ -314,6 +287,12 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           _buildSocialBtn(
             () => print('Login with Google'),
+            AssetImage(
+              'assets/logos/google.jpg',
+            ),
+          ),
+          _buildSocialBtn(
+                () => print('Login with Google'),
             AssetImage(
               'assets/logos/google.jpg',
             ),

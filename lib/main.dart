@@ -1,12 +1,14 @@
+import 'dart:convert';
+
 import 'package:app/bloc/complete_profile/complete_profile_bloc.dart';
 import 'package:app/bloc/login/login_bloc.dart';
 import 'package:app/bloc/register/register_bloc.dart';
+import 'package:app/models/user.dart';
 import 'package:app/routes.dart';
 import 'package:app/ui/auth/login_screen.dart';
 import 'package:app/ui/matches/matches_screen.dart';
 import 'package:app/ui/play_now/play_now_screen.dart';
 import 'package:app/ui/profiles/complete_profile_screen.dart';
-import 'package:app/ui/widgets/main_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         routes: routes,
-        home: CompleteProfileScreen(),
+        home: CheckAuth(),
         // home: CheckAuth(),
       ),
     );
@@ -55,14 +57,16 @@ class CheckAuth extends StatefulWidget {
 
 class _CheckAuthState extends State<CheckAuth> {
   bool isAuth = false;
+  bool isFullySet = false;
   @override
   void initState() {
-    _checkIfLoggedIn();
+    _checkWhereUserHaveToGo();
     super.initState();
   }
 
   void _checkIfLoggedIn() async{
     SharedPreferences localStorage = await SharedPreferences.getInstance();
+    User user = User.fromJson(jsonDecode(localStorage.getString('user')));
     var token = localStorage.getString('token');
     if(token != null){
       setState(() {
@@ -70,11 +74,32 @@ class _CheckAuthState extends State<CheckAuth> {
       });
     }
   }
+
+  void _checkWhereUserHaveToGo() async{
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    final token = localStorage.getString('token');
+    if(token != null){
+      setState(() {
+        isAuth = true;
+      });
+    }
+
+    User user = User.fromJson(jsonDecode(localStorage.getString('user')));
+    if (user.isFullySet) {
+      setState(() {
+        isFullySet = true;
+      });
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget child;
-    if (isAuth) {
-      child = MainContainer();
+    if (isAuth && !isFullySet) {
+      child = CompleteProfileScreen();
+    } else if (isAuth && isFullySet) {
+      child = MatchesScreen();
     } else {
       child = LoginScreen();
     }

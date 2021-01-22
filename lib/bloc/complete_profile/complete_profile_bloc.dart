@@ -19,6 +19,10 @@ class CompleteProfileBloc extends Bloc<CompleteProfileEvent, CompleteProfileStat
       yield ProfileCompletedState();
     } else if (event is ProfileCompleteErrorEvent) {
       yield ProfileCompleteErrorState();
+    } else if (event is ProfileCompleteLoadingUserLocationEvent) {
+      yield ProfileCompleteLoadingUserLocationState();
+    } else if (event is ProfileCompleteUserLocationLoadedEvent) {
+      yield ProfileCompleteUserLocationLoadedState();
     }
   }
 }

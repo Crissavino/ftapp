@@ -8,3 +8,7 @@ class ProfileCompleteLoadingEvent extends CompleteProfileEvent {}
 class ProfileCompletedEvent extends CompleteProfileEvent {}
 
 class ProfileCompleteErrorEvent extends CompleteProfileEvent {}
+
+class ProfileCompleteLoadingUserLocationEvent extends CompleteProfileEvent {}
+
+class ProfileCompleteUserLocationLoadedEvent extends CompleteProfileEvent {}
