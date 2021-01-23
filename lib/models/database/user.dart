@@ -4,6 +4,10 @@
 
 import 'dart:convert';
 
+import 'package:app/models/database/days_available.dart';
+import 'package:app/models/database/location.dart';
+import 'package:app/models/database/position.dart';
+
 User userFromJson(String str) => User.fromJson(json.decode(str));
 
 String userToJson(User data) => json.encode(data.toJson());
@@ -27,7 +31,10 @@ class User {
   dynamic emailVerifiedAt;
   bool isFullySet;
   bool online;
-  dynamic deletedAt;
+  // List<Position> positions;
+  // Location location;
+  // List<DaysAvailable> daysAvailables;
+  DateTime deletedAt;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -38,7 +45,7 @@ class User {
         emailVerifiedAt: json["email_verified_at"],
         isFullySet: json["isFullySet"] == 1 ? true : false,
         online: json["online"] == 1 ? true : false,
-        deletedAt: json["deleted_at"],
+        deletedAt: json["deleted_at"] != null ? DateTime.parse(json["deleted_at"]) : null,
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
       );
@@ -50,7 +57,7 @@ class User {
         "email_verified_at": emailVerifiedAt,
         "isFullySet": isFullySet,
         "online": online,
-        "deleted_at": deletedAt,
+        "deleted_at": deletedAt?.toIso8601String(),
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
       };

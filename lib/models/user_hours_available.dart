@@ -36,21 +36,21 @@ class UserHoursAvailable {
   });
 
   Map<String, bool> toJson() => {
-  "is08Available": is08Available,
-  "is810Available": is810Available,
-  "is1011Available": is1011Available,
-  "is1112Available": is1112Available,
-  "is1213Available": is1213Available,
-  "is1314Available": is1314Available,
-  "is1415Available": is1415Available,
-  "is1516Available": is1516Available,
-  "is1617Available": is1617Available,
-  "is1718Available": is1718Available,
-  "is1819Available": is1819Available,
-  "is1920Available": is1920Available,
-  "is2021Available": is2021Available,
-  "is2122Available": is2122Available,
-  "is2223Available": is2223Available,
-  "is2300Available": is2300Available,
-};
+        "is08Available": is08Available,
+        "is810Available": is810Available,
+        "is1011Available": is1011Available,
+        "is1112Available": is1112Available,
+        "is1213Available": is1213Available,
+        "is1314Available": is1314Available,
+        "is1415Available": is1415Available,
+        "is1516Available": is1516Available,
+        "is1617Available": is1617Available,
+        "is1718Available": is1718Available,
+        "is1819Available": is1819Available,
+        "is1920Available": is1920Available,
+        "is2021Available": is2021Available,
+        "is2122Available": is2122Available,
+        "is2223Available": is2223Available,
+        "is2300Available": is2300Available,
+      };
 }

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:app/bloc/complete_profile/complete_profile_bloc.dart';
 import 'package:app/bloc/login/login_bloc.dart';
 import 'package:app/bloc/register/register_bloc.dart';
-import 'package:app/models/user.dart';
+import 'package:app/models/database/user.dart';
 import 'package:app/routes.dart';
 import 'package:app/ui/auth/login_screen.dart';
 import 'package:app/ui/matches/matches_screen.dart';
@@ -84,12 +84,15 @@ class _CheckAuthState extends State<CheckAuth> {
       });
     }
 
-    User user = User.fromJson(jsonDecode(localStorage.getString('user')));
-    if (user.isFullySet) {
-      setState(() {
-        isFullySet = true;
-      });
+    if (localStorage.containsKey('user')) {
+      User user = User.fromJson(jsonDecode(localStorage.getString('user')));
+      if (user.isFullySet) {
+        setState(() {
+          isFullySet = true;
+        });
+      }
     }
+
 
   }
 

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:app/bloc/login/login_bloc.dart';
-import 'package:app/models/user.dart';
+import 'package:app/models/database/user.dart';
 import 'package:app/repositories/user_repository.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/show_alert.dart';

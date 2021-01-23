@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:app/bloc/register/register_bloc.dart';
-import 'package:app/models/user.dart';
+import 'package:app/models/database/user.dart';
 import 'package:app/repositories/user_repository.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/show_alert.dart';
@@ -417,7 +417,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 alignment: Alignment.center,
                 decoration: verticalGradient,
                 height: double.infinity,
-                child: BlocBuilder(
+                child: BlocBuilder<RegisterBloc, RegisterState>(
                   builder: (BuildContext context, state) {
 
                     if (state is RegisteringState) {

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:app/bloc/complete_profile/complete_profile_bloc.dart';
-import 'package:app/models/user.dart';
+import 'package:app/models/database/user.dart';
 import 'package:app/models/user_days_available.dart';
 import 'package:app/models/user_hours_available.dart';
 import 'package:app/models/user_location.dart';
@@ -22,6 +22,7 @@ import 'package:getwidget/components/checkbox_list_tile/gf_checkbox_list_tile.da
 import 'package:getwidget/components/intro_screen/gf_intro_screen.dart';
 import 'package:getwidget/components/intro_screen/gf_intro_screen_bottom_navigation_bar.dart';
 import 'package:getwidget/types/gf_checkbox_type.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
   @override
@@ -229,7 +230,6 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     Widget _buildSearchLocationBar() {
       return GestureDetector(
         onTap: () async {
-
           final Suggestion result =
           await showSearch(context: context, delegate: SearchLocation());
 
@@ -1204,6 +1204,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       ProfileCompletedEvent()
                   );
                 } else {
+                  BlocProvider.of<CompleteProfileBloc>(context).add(
+                      ProfileCompleteErrorEvent()
+                  );
                   return showAlert(
                     context,
                     'Error!',

@@ -1,6 +1,9 @@
 import 'dart:convert';
 
-import 'package:app/models/user.dart';
+import 'package:app/models/database/days_available.dart';
+import 'package:app/models/database/location.dart';
+import 'package:app/models/database/position.dart';
+import 'package:app/models/database/user.dart';
 import 'package:app/models/user_days_available.dart';
 import 'package:app/models/user_hours_available.dart';
 import 'package:app/models/user_location.dart';
@@ -23,7 +26,7 @@ class UserRepository {
 
     final body = json.decode(res.body);
 
-    if (body['success']) {
+    if (body['success'] == true) {
       SharedPreferences localStorage = await SharedPreferences.getInstance();
       await localStorage.remove('user');
       await localStorage.remove('token');
@@ -111,18 +114,13 @@ class UserRepository {
     Map<int, UserHoursAvailable> daysAvailable,
   ) async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    // User user = User.fromJson(jsonDecode(localStorage.getString('user')));
+    User user = User.fromJson(jsonDecode(localStorage.getString('user')));
 
     final data = {
-      "user_id": 1, //user.id
+      "user_id": user.id,
       "userPositions": userPositions.toJson(),
       "userLocationDetails": userLocationDetails.toJson(),
       "daysAvailable": UserDaysAvailable().getDataDayAvailable(daysAvailable)
-    };
-
-    await Future.delayed(Duration(seconds: 1));
-    return {
-      "success": true,
     };
 
     final res = await api.postData(data, '/complete-user-profile');
@@ -130,11 +128,36 @@ class UserRepository {
     final body = json.decode(res.body);
 
     if (body.containsKey('success') && body['success'] == true) {
-      await localStorage.remove('user');
-      await localStorage.setString('token', json.encode(body['token']));
       await localStorage.setString('user', json.encode(body['user']));
+      await localStorage.setString('userPositions', json.encode(body['user']['positions']));
+      await localStorage.setString('userDaysAvailables', json.encode(body['user']['days_availables']));
+      await localStorage.setString('userLocation', json.encode(body['user']['location']));
     }
 
     return body;
+  }
+
+  Future<List<Position>> getUserPositions() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    List<Position> userPositions = [];
+    jsonDecode(localStorage.getString('userPositions')).forEach((element) {
+      userPositions.add(Position.fromJson(element));
+    });
+
+    return userPositions;
+  }
+
+  Future<List<DaysAvailable>> getUserDaysAvailables() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    List<DaysAvailable> userDaysAvailable = [];
+    jsonDecode(localStorage.getString('userDaysAvailables')).forEach((element) {
+      userDaysAvailable.add(DaysAvailable.fromJson(element));
+    });
+    return userDaysAvailable;
+  }
+
+  Future<Location> getUserLocation() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    return Location.fromJson(jsonDecode(localStorage.getString('userLocation')));
   }
 }

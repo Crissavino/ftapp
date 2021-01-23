@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/models/user.dart';
+import 'package:app/models/database/user.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

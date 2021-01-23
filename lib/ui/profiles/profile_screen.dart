@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:app/models/user.dart';
+import 'package:app/models/database/user.dart';
 import 'package:app/repositories/user_repository.dart';
 import 'package:app/ui/chats/chats_screen.dart';
 import 'package:app/ui/matches/matches_screen.dart';
