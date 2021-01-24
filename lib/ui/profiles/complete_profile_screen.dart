@@ -17,10 +17,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/colors/gf_color.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
+import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/checkbox/gf_checkbox.dart';
 import 'package:getwidget/components/checkbox_list_tile/gf_checkbox_list_tile.dart';
 import 'package:getwidget/components/intro_screen/gf_intro_screen.dart';
 import 'package:getwidget/components/intro_screen/gf_intro_screen_bottom_navigation_bar.dart';
+import 'package:getwidget/components/radio/gf_radio.dart';
+import 'package:getwidget/size/gf_size.dart';
 import 'package:getwidget/types/gf_checkbox_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,6 +40,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
 
   // text field state
   String localeName = Platform.localeName.split('_')[0];
+  bool _male = false;
+  bool _female = false;
   bool _gkPos = false;
   bool _defPos = false;
   bool _mfPos = false;
@@ -227,6 +232,142 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
       );
     }
 
+    Widget _buildGender() {
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            decoration: kBoxDecorationStyle,
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: Column(
+              children: [
+                ListTile(
+                  leading: Text(
+                    'Género',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  trailing: IconButton(
+                    padding: EdgeInsets.only(
+                      left: 15.0,
+                    ),
+                    icon: Icon(
+                      Icons.info_outline,
+                      color: Colors.blue,
+                      size: 30.0,
+                    ),
+                    onPressed: () {
+                      showAlert(
+                        context,
+                        'Informacion',
+                        'Selecciona tu género (Esta informacion no vas a poder cambiarla)',
+                      );
+                    },
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: Text(
+                          'Hombre',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    GFCheckbox(
+                      size: 35,
+                      activeBgColor: Colors.green[400],
+                      inactiveBorderColor: Colors.green[700],
+                      activeBorderColor: Colors.green[700],
+                      type: GFCheckboxType.circle,
+                      value: _male,
+                      inactiveIcon: null,
+                      activeIcon: Icon(
+                        Icons.sports_soccer,
+                        size: 25,
+                        color: Colors.white,
+                      ),
+                      onChanged: (value) {
+                        if (!_female && !value) {
+                          setState(() {
+                            _male = true;
+                          });
+                        } else {
+                          setState(() {
+                            _male = !_male;
+                            _female = false;
+                          });
+                        }
+                      },
+                    ),
+                    SizedBox(width: 15.0,)
+                  ],
+                ),
+                SizedBox(height: 20.0,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: Text(
+                          'Mujer',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    GFCheckbox(
+                      size: 35,
+                      activeBgColor: Colors.green[400],
+                      inactiveBorderColor: Colors.green[700],
+                      activeBorderColor: Colors.green[700],
+                      type: GFCheckboxType.circle,
+                      value: _female,
+                      inactiveIcon: null,
+                      activeIcon: Icon(
+                        Icons.sports_soccer,
+                        size: 25,
+                        color: Colors.white,
+                      ),
+                      onChanged: (value) {
+                        if (!_male && !value) {
+                          setState(() {
+                            _female = true;
+                          });
+                        } else {
+                          setState(() {
+                            _female = !_female;
+                            _male = false;
+                          });
+                        }
+                      },
+                    ),
+                    SizedBox(width: 15.0,)
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+    // section 1
+
+    // section 2
     Widget _buildSearchLocationBar() {
       return GestureDetector(
         onTap: () async {
@@ -240,6 +381,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
             setState(() {
               userLocationDesc = result.description;
               userLocationDetails = result.details;
+              print(userLocationDetails.lat);
+              print(userLocationDetails.lng);
             });
           }
         },
@@ -322,9 +465,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
         ],
       );
     }
-    // section 1
 
-    // section 2
     Widget _buildHourlyIncidence() {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -370,14 +511,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         child: Text(
                           'Domingo',
                           style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
                     GFCheckbox(
-                      size: 30,
+                      size: 35,
                       activeBgColor: Colors.green[400],
                       inactiveBorderColor: Colors.green[700],
                       activeBorderColor: Colors.green[700],
@@ -386,7 +527,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       inactiveIcon: null,
                       activeIcon: Icon(
                         Icons.sports_soccer,
-                        size: 20,
+                        size: 25,
                         color: Colors.white,
                       ),
                       onChanged: (value) {
@@ -432,8 +573,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                           final UserHoursAvailable hoursAvailable = await showModalBottomSheet(
                             backgroundColor: Colors.transparent,
                             context: context,
-                            enableDrag: true,
+                            enableDrag: false,
                             isScrollControlled: true,
+                            isDismissible: false,
                             builder: (BuildContext context) {
                               return HourAvailable(
                                 userHoursAvailable: this._userDaysAvailable.daysAvailable[0],
@@ -458,14 +600,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         child: Text(
                           'Lunes',
                           style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
                     GFCheckbox(
-                      size: 30,
+                      size: 35,
                       activeBgColor: Colors.green[400],
                       inactiveBorderColor: Colors.green[700],
                       activeBorderColor: Colors.green[700],
@@ -474,7 +616,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       inactiveIcon: null,
                       activeIcon: Icon(
                         Icons.sports_soccer,
-                        size: 20,
+                        size: 25,
                         color: Colors.white,
                       ),
                       onChanged: (value) {
@@ -520,8 +662,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                           final UserHoursAvailable hoursAvailable = await showModalBottomSheet(
                             backgroundColor: Colors.transparent,
                             context: context,
-                            enableDrag: true,
+                            enableDrag: false,
                             isScrollControlled: true,
+                            isDismissible: false,
                             builder: (BuildContext context) {
                               return HourAvailable(
                                 userHoursAvailable: this._userDaysAvailable.daysAvailable[1],
@@ -546,14 +689,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         child: Text(
                           'Martes',
                           style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
                     GFCheckbox(
-                      size: 30,
+                      size: 35,
                       activeBgColor: Colors.green[400],
                       inactiveBorderColor: Colors.green[700],
                       activeBorderColor: Colors.green[700],
@@ -562,7 +705,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       inactiveIcon: null,
                       activeIcon: Icon(
                         Icons.sports_soccer,
-                        size: 20,
+                        size: 25,
                         color: Colors.white,
                       ),
                       onChanged: (value) {
@@ -608,8 +751,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                           final UserHoursAvailable hoursAvailable = await showModalBottomSheet(
                             backgroundColor: Colors.transparent,
                             context: context,
-                            enableDrag: true,
+                            enableDrag: false,
                             isScrollControlled: true,
+                            isDismissible: false,
                             builder: (BuildContext context) {
                               return HourAvailable(
                                 userHoursAvailable: this._userDaysAvailable.daysAvailable[2],
@@ -634,14 +778,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         child: Text(
                           'Miercols',
                           style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
                     GFCheckbox(
-                      size: 30,
+                      size: 35,
                       activeBgColor: Colors.green[400],
                       inactiveBorderColor: Colors.green[700],
                       activeBorderColor: Colors.green[700],
@@ -650,7 +794,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       inactiveIcon: null,
                       activeIcon: Icon(
                         Icons.sports_soccer,
-                        size: 20,
+                        size: 25,
                         color: Colors.white,
                       ),
                       onChanged: (value) {
@@ -696,8 +840,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                           final UserHoursAvailable hoursAvailable = await showModalBottomSheet(
                             backgroundColor: Colors.transparent,
                             context: context,
-                            enableDrag: true,
+                            enableDrag: false,
                             isScrollControlled: true,
+                            isDismissible: false,
                             builder: (BuildContext context) {
                               return HourAvailable(
                                 userHoursAvailable: this._userDaysAvailable.daysAvailable[3],
@@ -722,14 +867,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         child: Text(
                           'Jueves',
                           style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
                     GFCheckbox(
-                      size: 30,
+                      size: 35,
                       activeBgColor: Colors.green[400],
                       inactiveBorderColor: Colors.green[700],
                       activeBorderColor: Colors.green[700],
@@ -738,7 +883,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       inactiveIcon: null,
                       activeIcon: Icon(
                         Icons.sports_soccer,
-                        size: 20,
+                        size: 25,
                         color: Colors.white,
                       ),
                       onChanged: (value) {
@@ -784,8 +929,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                           final UserHoursAvailable hoursAvailable = await showModalBottomSheet(
                             backgroundColor: Colors.transparent,
                             context: context,
-                            enableDrag: true,
+                            enableDrag: false,
                             isScrollControlled: true,
+                            isDismissible: false,
                             builder: (BuildContext context) {
                               return HourAvailable(
                                 userHoursAvailable: this._userDaysAvailable.daysAvailable[4],
@@ -810,14 +956,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         child: Text(
                           'Viernes',
                           style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
                     GFCheckbox(
-                      size: 30,
+                      size: 35,
                       activeBgColor: Colors.green[400],
                       inactiveBorderColor: Colors.green[700],
                       activeBorderColor: Colors.green[700],
@@ -826,7 +972,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       inactiveIcon: null,
                       activeIcon: Icon(
                         Icons.sports_soccer,
-                        size: 20,
+                        size: 25,
                         color: Colors.white,
                       ),
                       onChanged: (value) {
@@ -872,8 +1018,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                           final UserHoursAvailable hoursAvailable = await showModalBottomSheet(
                             backgroundColor: Colors.transparent,
                             context: context,
-                            enableDrag: true,
+                            enableDrag: false,
                             isScrollControlled: true,
+                            isDismissible: false,
                             builder: (BuildContext context) {
                               return HourAvailable(
                                 userHoursAvailable: this._userDaysAvailable.daysAvailable[5],
@@ -898,14 +1045,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         child: Text(
                           'Sabado',
                           style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
                     GFCheckbox(
-                      size: 30,
+                      size: 35,
                       activeBgColor: Colors.green[400],
                       inactiveBorderColor: Colors.green[700],
                       activeBorderColor: Colors.green[700],
@@ -914,7 +1061,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       inactiveIcon: null,
                       activeIcon: Icon(
                         Icons.sports_soccer,
-                        size: 20,
+                        size: 25,
                         color: Colors.white,
                       ),
                       onChanged: (value) {
@@ -960,8 +1107,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                           final UserHoursAvailable hoursAvailable = await showModalBottomSheet(
                             backgroundColor: Colors.transparent,
                             context: context,
-                            enableDrag: true,
+                            enableDrag: false,
                             isScrollControlled: true,
+                            isDismissible: false,
                             builder: (BuildContext context) {
                               return HourAvailable(
                                 userHoursAvailable: this._userDaysAvailable.daysAvailable[6],
@@ -977,6 +1125,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                     )
                   ],
                 ),
+                SizedBox(height: 20.0,),
               ],
             ),
           ),
@@ -1015,7 +1164,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                               children: [
                                 _buildPositionsCheckboxes(),
                                 SizedBox(height: 20.0),
-                                _buildWhereToPlay(),
+                                _buildGender(),
                               ],
                             ),
                           )
@@ -1048,19 +1197,13 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          // _buildPage2Title(),
-                          // SizedBox(
-                          //   height: 30.0,
-                          // ),
                           Form(
                             key: _formKey2,
                             child: Column(
                               children: [
+                                _buildWhereToPlay(),
+                                SizedBox(height: 20.0),
                                 _buildHourlyIncidence(),
-                                // SizedBox(
-                                //   height: 30.0,
-                                // ),
-                                // _buildWhereToPlay(),
                               ],
                             ),
                           )
@@ -1079,6 +1222,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
 
     return SafeArea(
       top: false,
+      bottom: false,
       child: BlocBuilder<CompleteProfileBloc, CompleteProfileState>(
         builder: (BuildContext context, state) {
 
@@ -1140,6 +1284,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                     curve: Curves.linear);
               },
               onDoneTap: () async {
+                print('tap');
                 bool noPositionSelected = (!_gkPos && !_defPos && !_mfPos && !_forPos);
                 bool noDaysSelected = (
                     this._userDaysAvailable.daysAvailable[0] == null &&
@@ -1163,6 +1308,15 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                     context,
                     'Atencion!',
                     'Debes seleccionar alguna posicion en la que usualmente juegas',
+                  );
+                } else if (!_male && !_female){
+                  BlocProvider.of<CompleteProfileBloc>(context).add(
+                      ProfileCompleteErrorEvent()
+                  );
+                  return showAlert(
+                    context,
+                    'Atencion!',
+                    'Debes seleccionar tu sexo',
                   );
                 } else if (userLocationDesc.isEmpty){
                   BlocProvider.of<CompleteProfileBloc>(context).add(
@@ -1191,10 +1345,13 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                   forward: _forPos,
                 );
 
+                bool isMale = _male;
+
                 final completeUserProfileResponse = await _userRepository.completeUserProfile(
                   userPositions,
                   userLocationDetails,
                   this._userDaysAvailable.daysAvailable,
+                  isMale
                 );
 
                 if (completeUserProfileResponse['success'] == true) {
@@ -1217,6 +1374,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
               dotWidth: 10.0,
               dotHeight: 10.0,
               navigationBarColor: Colors.white,
+              navigationBarHeight: 60.0,
+              navigationBarPadding: EdgeInsets.only(left: 30.0, right: 30.0),
               showDivider: false,
               skipButton: Container(),
               inactiveColor: Colors.grey[200],

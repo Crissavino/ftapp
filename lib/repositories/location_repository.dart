@@ -35,18 +35,4 @@ class LocationRepository {
     return await Geolocator.getCurrentPosition();
   }
 
-  Future getUserLocationDataFromMapBox({double lat, double long, String query}) async {
-    String searchLatLongInMapBox = '$_searchLatLongUrl/$long%2C$lat.json?access_token=$_accessToken&cachebuster=1610899994718&autocomplete=false';
-    String ap = 'https://api.mapbox.com/geocoding/v5/mapbox.places/-122.16556763702022%2C37.44458152057953.json?access_token=pk.eyJ1Ijoic2VhcmNoLW1hY2hpbmUtdXNlci0xIiwiYSI6ImNrN2Y1Nmp4YjB3aG4zZ253YnJoY21kbzkifQ.JM5ZeqwEEm-Tonrk5wOOMw&cachebuster=1610899994718&autocomplete=false';
-    print(ap);
-    final res = await http.get(
-      ap,
-    );
-
-    final body = json.decode(res.body);
-
-    return body;
-
-  }
-
 }

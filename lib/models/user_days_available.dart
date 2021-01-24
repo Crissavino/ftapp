@@ -15,7 +15,6 @@ class UserDaysAvailable {
 
   setDaysAvailable(int dayOfTheWeek, UserHoursAvailable hoursAvailable) {
     _daysAvailable.update(dayOfTheWeek, (value) => hoursAvailable);
-    print(_daysAvailable);
   }
 
   getDataDayAvailable(daysAvailable) {

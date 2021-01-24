@@ -87,6 +87,7 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
       children: [
         SafeArea(
           top: false,
+          bottom: false,
           child: Scaffold(
             body: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle.light,
@@ -215,26 +216,29 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
   void _navigateToSection(index){
     switch (index) {
       case 1:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          SlideBottomRoute(
-            page: MatchesScreen(),
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => MatchesScreen(),
+            transitionDuration: Duration(seconds: 0),
           ),
         );
         break;
       case 2:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          SlideBottomRoute(
-            page: ChatsScreen(),
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => ChatsScreen(),
+            transitionDuration: Duration(seconds: 0),
           ),
         );
         break;
       case 3:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          SlideBottomRoute(
-            page: ProfileScreen(),
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => ProfileScreen(),
+            transitionDuration: Duration(seconds: 0),
           ),
         );
         break;

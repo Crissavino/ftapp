@@ -4,6 +4,8 @@ class UserLocation {
   final String province;
   final String provinceCode;
   final String city;
+  double lat;
+  double lng;
 
   UserLocation({
     this.country,
@@ -11,13 +13,17 @@ class UserLocation {
     this.province,
     this.provinceCode,
     this.city,
+    this.lat,
+    this.lng,
   });
 
-  Map<String, String> toJson() => {
+  Map<String, dynamic> toJson() => {
     "country": country,
     "countryCode": countryCode,
     "province": province,
     "provinceCode": provinceCode,
     "city": city,
+    "lat": lat,
+    "lng": lng,
   };
 }

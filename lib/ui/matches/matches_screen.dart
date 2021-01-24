@@ -87,6 +87,7 @@ class _MatchesState extends State<MatchesScreen> {
       children: [
         SafeArea(
           top: false,
+          bottom: false,
           child: Scaffold(
             body: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle.light,

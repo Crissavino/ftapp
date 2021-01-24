@@ -112,6 +112,7 @@ class UserRepository {
     UserPositions userPositions,
     UserLocation userLocationDetails,
     Map<int, UserHoursAvailable> daysAvailable,
+    bool isMale
   ) async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     User user = User.fromJson(jsonDecode(localStorage.getString('user')));
@@ -120,7 +121,8 @@ class UserRepository {
       "user_id": user.id,
       "userPositions": userPositions.toJson(),
       "userLocationDetails": userLocationDetails.toJson(),
-      "daysAvailable": UserDaysAvailable().getDataDayAvailable(daysAvailable)
+      "daysAvailable": UserDaysAvailable().getDataDayAvailable(daysAvailable),
+      "isMale": isMale
     };
 
     final res = await api.postData(data, '/complete-user-profile');
@@ -159,5 +161,26 @@ class UserRepository {
   Future<Location> getUserLocation() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     return Location.fromJson(jsonDecode(localStorage.getString('userLocation')));
+  }
+
+  Future<dynamic> editUserPositions(UserPositions userPositions) async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    User user = User.fromJson(jsonDecode(localStorage.getString('user')));
+
+    final data = {
+      "user_id": user.id,
+      "userPositions": userPositions.toJson(),
+    };
+
+    final res = await api.postData(data, '/edit-user-positions');
+
+    final body = json.decode(res.body);
+
+    if (body.containsKey('success') && body['success'] == true) {
+      await localStorage.setString('user', json.encode(body['user']));
+      await localStorage.setString('userPositions', json.encode(body['user']['positions']));
+    }
+
+    return body;
   }
 }

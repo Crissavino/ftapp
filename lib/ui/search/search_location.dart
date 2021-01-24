@@ -75,14 +75,15 @@ class SearchLocation extends SearchDelegate<Suggestion> {
                     final UserLocation locationDetails =
                         await PlaceApiProvider(sessionToken)
                             .getPlaceDetailFromId(location.placeId);
+                    locationDetails.lat = location.details.lat;
+                    locationDetails.lng = location.details.lng;
                     final Suggestion myLocationSuggestion = Suggestion(
                         location.placeId,
-                        '${locationDetails.city}, ${locationDetails.province}, ${locationDetails.country}',
-                        locationDetails);
+                        location.description,
+                        locationDetails,
+                    );
 
                     close(context, myLocationSuggestion);
-
-                    // print(myLocation.toString());
                   },
                 ),
               );
@@ -104,18 +105,20 @@ class SearchLocation extends SearchDelegate<Suggestion> {
                     return ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
-                        print(snapshot.data[0]);
                         return ListTile(
                           // we will display the data returned from our future here
                           title: Text(snapshot.data[index].description),
                           onTap: () async {
+                            print(snapshot.data[index].details.lng);
                             final UserLocation locationDetails =
                                 await PlaceApiProvider(sessionToken)
                                     .getPlaceDetailFromId(
                                         snapshot.data[index].placeId);
+                            locationDetails.lng = snapshot.data[index].details.lng;
+                            locationDetails.lat = snapshot.data[index].details.lat;
                             final Suggestion myLocationSuggestion = Suggestion(
                                 snapshot.data[index].placeId,
-                                '${locationDetails.city}, ${locationDetails.province}, ${locationDetails.country}',
+                                snapshot.data[index].description,
                                 locationDetails);
 
                             close(context, myLocationSuggestion);

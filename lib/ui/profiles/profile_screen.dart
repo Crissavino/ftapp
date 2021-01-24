@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:app/models/database/position.dart';
 import 'package:app/models/database/user.dart';
 import 'package:app/repositories/user_repository.dart';
 import 'package:app/ui/chats/chats_screen.dart';
 import 'package:app/ui/matches/matches_screen.dart';
 import 'package:app/ui/play_now/play_now_screen.dart';
+import 'package:app/ui/widgets/your_positions.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/slide_bottom_route.dart';
 import 'package:flutter/material.dart';
@@ -19,29 +21,21 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   UserRepository _userRepository = UserRepository();
   User user;
+  List<Position> userPositions;
 
   // text field state
-  String fullName = '';
-  String email = '';
   String localeName = Platform.localeName.split('_')[0];
-  bool _gkPos = false;
-  bool _defPos = false;
-  bool _mfPos = false;
-  bool _forPos = false;
 
   @override
   void initState() {
-    _loadUserData();
     super.initState();
   }
 
-  _loadUserData() async {
+  Future<User> _loadUserData() async {
     this.user = await _userRepository.getUser();
+    this.userPositions = await _userRepository.getUserPositions();
 
-    // if(user != null) {
-    //   setState(() {
-    //   });
-    // }
+    return this.user;
   }
 
   @override
@@ -51,84 +45,206 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Stack(
       children: [
-        SafeArea(
-          top: false,
-          child: Scaffold(
-            body: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light,
-              child: Center(
-                child: Container(
-                  height: _height,
-                  decoration: horizontalGradient,
-                  padding: EdgeInsets.only(top: 25.0),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      double innerHeight = constraints.maxHeight;
-                      double innerWidth = constraints.maxWidth;
+        FutureBuilder(
+          future: _loadUserData(),
+            builder: (BuildContext context, AsyncSnapshot<User>snapshot) {
+            print('gol');
+          if(snapshot.hasData) {
+            return SafeArea(
+              top: false,
+              bottom: false,
+              child: Scaffold(
+                body: AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: SystemUiOverlayStyle.light,
+                  child: Center(
+                    child: Container(
+                      height: _height,
+                      decoration: horizontalGradient,
+                      padding: EdgeInsets.only(top: 25.0),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          double innerHeight = constraints.maxHeight;
+                          double innerWidth = constraints.maxWidth;
 
-                      return Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Positioned(
-                            bottom: 0.0,
-                            left: 0.0,
-                            right: 0.0,
-                            child: Container(
-                              height: innerHeight * 0.87,
-                              width: innerWidth,
-                              decoration: BoxDecoration(
-                                borderRadius: screenBorders,
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 6.0,
-                                    offset: Offset(0, -2),
+                          return SafeArea(
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                Positioned(
+                                  bottom: 0.0,
+                                  left: 0.0,
+                                  right: 0.0,
+                                  child: Container(
+                                    height: innerHeight * 0.87,
+                                    width: innerWidth,
+                                    decoration: BoxDecoration(
+                                      borderRadius: screenBorders,
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 6.0,
+                                          offset: Offset(0, -2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 75.0),
+                                        _buildUserName(),
+                                        SizedBox(height: 35.0),
+                                        _buildUserReviews(innerWidth),
+                                        SizedBox(height: 35.0),
+                                        _buildUserPositions(innerWidth),
+                                        Expanded(child: Container(),),
+                                        _buildLogOutButton(),
+                                        SizedBox(height: 20.0),
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  SizedBox(height: 50.0),
-                                  _buildUserName(),
-                                  SizedBox(height: 15.0),
-                                  _buildUserReviews(innerWidth),
-                                  SizedBox(height: 15.0),
-                                  _buildUserPositions(innerWidth),
-                                  SizedBox(height: 15.0),
-                                  _buildLogOutButton(),
-                                ],
-                              ),
+                                ),
+                                Positioned(
+                                  top: 0.0,
+                                  left: 0.0,
+                                  right: 0.0,
+                                  child: Center(
+                                    child: CircleAvatar(
+                                      radius: 60,
+                                      backgroundImage:
+                                      AssetImage('assets/profile_cs.jpg'),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Positioned(
-                            top: 0.0,
-                            left: 0.0,
-                            right: 0.0,
-                            child: Center(
-                              child: CircleAvatar(
-                                radius: 60,
-                                backgroundImage:
-                                    AssetImage('assets/profile_cs.jpg'),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
+                bottomNavigationBar: _buildBottomNavigationBarRounded(),
               ),
-            ),
-            bottomNavigationBar: _buildBottomNavigationBarRounded(),
-          ),
-        ),
+            );
+          } else {
+
+            return SafeArea(
+              top: false,
+              bottom: false,
+              child: Scaffold(
+                body: AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: SystemUiOverlayStyle.light,
+                  child: Center(
+                    child: Container(
+                      height: _height,
+                      decoration: horizontalGradient,
+                      padding: EdgeInsets.only(top: 25.0),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          double innerHeight = constraints.maxHeight;
+                          double innerWidth = constraints.maxWidth;
+
+                          return SafeArea(
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                Positioned(
+                                  bottom: 0.0,
+                                  left: 0.0,
+                                  right: 0.0,
+                                  child: Container(
+                                    height: innerHeight * 0.87,
+                                    width: innerWidth,
+                                    decoration: BoxDecoration(
+                                      borderRadius: screenBorders,
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 6.0,
+                                          offset: Offset(0, -2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 0.0,
+                                  left: 0.0,
+                                  right: 0.0,
+                                  child: Center(
+                                    child: CircleAvatar(
+                                      radius: 60,
+                                      backgroundImage: null,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                bottomNavigationBar: _buildBottomNavigationBarRounded(),
+              ),
+            );
+            return Container(
+              decoration: verticalGradient,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  whiteCircularLoading
+                ],
+              ),
+            );
+          }
+        }),
       ],
     );
   }
 
   _buildUserPositions(innerWidth) {
+    return GestureDetector(
+      child: Container(
+          width: innerWidth * .95,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+        child: ListTile(
+          title: Text('Tus posiciones'),
+          trailing: Icon(Icons.keyboard_arrow_up_outlined, size: 40.0,),
+        ),
+      ),
+      onTap: () {
+        showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          enableDrag: true,
+          isScrollControlled: true,
+          builder: (BuildContext context) {
+            return YourPositions(userPositions: this.userPositions,);
+          },
+        );
+      },
+    );
+
     return Container(
       width: innerWidth * .95,
       decoration: BoxDecoration(
@@ -255,26 +371,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _navigateToSection(index) {
     switch (index) {
       case 0:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          SlideBottomRoute(
-            page: PlayNowScreen(),
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => PlayNowScreen(),
+            transitionDuration: Duration(seconds: 0),
           ),
         );
         break;
       case 1:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          SlideBottomRoute(
-            page: MatchesScreen(),
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => MatchesScreen(),
+            transitionDuration: Duration(seconds: 0),
           ),
         );
         break;
       case 2:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          SlideBottomRoute(
-            page: ChatsScreen(),
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => ChatsScreen(),
+            transitionDuration: Duration(seconds: 0),
           ),
         );
         break;
@@ -513,7 +632,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _buildUserName() {
     return Text(
-      'Cris Savino',
+      this.user.name,
       style:
           TextStyle(color: Colors.black, fontFamily: 'Nunito', fontSize: 30.0),
     );

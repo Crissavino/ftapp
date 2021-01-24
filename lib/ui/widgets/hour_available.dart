@@ -141,6 +141,7 @@ class _HourAvailableState extends State<HourAvailable> {
 
     return Container(
       height: _height / 1.1,
+      width: _width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -148,16 +149,235 @@ class _HourAvailableState extends State<HourAvailable> {
           topRight: Radius.circular(30.0),
         ),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 20.0, bottom: 0.0),
-              child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 20.0, bottom: 0.0),
+            child: Center(
+              child: Text(
+                'Disponibilidad',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'OpenSans',
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Column(
+                children: [
+                  _buildHourRange(
+                    is08Available,
+                    '00:00 - 08:00',
+                        () {
+                      setState(() {
+                        is08Available = !is08Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is1011Available,
+                    '10:00 - 11:00',
+                        () {
+                      setState(() {
+                        is1011Available = !is1011Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is1213Available,
+                    '12:00 - 13:00',
+                        () {
+                      setState(() {
+                        is1213Available = !is1213Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is1415Available,
+                    '14:00 - 15:00',
+                        () {
+                      setState(() {
+                        is1415Available = !is1415Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is1617Available,
+                    '16:00 - 17:00',
+                        () {
+                      setState(() {
+                        is1617Available = !is1617Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is1819Available,
+                    '18:00 - 19:00',
+                        () {
+                      setState(() {
+                        is1819Available = !is1819Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is2021Available,
+                    '20:00 - 21:00',
+                        () {
+                      setState(() {
+                        is2021Available = !is2021Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is2223Available,
+                    '22:00 - 23:00',
+                        () {
+                      setState(() {
+                        is2223Available = !is2223Available;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  _buildHourRange(
+                    is810Available,
+                    '08:00 - 10:00',
+                        () {
+                      setState(() {
+                        is810Available = !is810Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is1112Available,
+                    '11:00 - 12:00',
+                        () {
+                      setState(() {
+                        is1112Available = !is1112Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is1314Available,
+                    '13:00 - 14:00',
+                        () {
+                      setState(() {
+                        is1314Available = !is1314Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is1516Available,
+                    '15:00 - 16:00',
+                        () {
+                      setState(() {
+                        is1516Available = !is1516Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is1718Available,
+                    '17:00 - 18:00',
+                        () {
+                      setState(() {
+                        is1718Available = !is1718Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is1920Available,
+                    '19:00 - 20:00',
+                        () {
+                      setState(() {
+                        is1920Available = !is1920Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is2122Available,
+                    '21:00 - 22:00',
+                        () {
+                      setState(() {
+                        is2122Available = !is2122Available;
+                      });
+                    },
+                  ),
+                  _buildHourRange(
+                    is2300Available,
+                    '23:00 - 00:00',
+                        () {
+                      setState(() {
+                        is2300Available = !is2300Available;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 20.0),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.green[600],
+                  Colors.green[500],
+                  Colors.green[500],
+                  Colors.green[600],
+                ],
+                stops: [0.1, 0.4, 0.7, 0.9],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.green[100],
+                  blurRadius: 10.0,
+                  offset: Offset(0, 8),
+                ),
+              ],
+              color: Colors.green[400],
+              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+            ),
+            width: _width * .40,
+            height: 50.0,
+            child: Center(
+              child: FlatButton(
+                splashColor: Colors.transparent,
+                onPressed: () {
+                  UserHoursAvailable _userHoursAvailable = UserHoursAvailable(
+                    is08Available: is08Available,
+                    is810Available: is810Available,
+                    is1011Available: is1011Available,
+                    is1112Available: is1112Available,
+                    is1213Available: is1213Available,
+                    is1314Available: is1314Available,
+                    is1415Available: is1415Available,
+                    is1516Available: is1516Available,
+                    is1617Available: is1617Available,
+                    is1718Available: is1718Available,
+                    is1819Available: is1819Available,
+                    is1920Available: is1920Available,
+                    is2021Available: is2021Available,
+                    is2122Available: is2122Available,
+                    is2223Available: is2223Available,
+                    is2300Available: is2300Available,
+                  );
+                  Navigator.pop(context, _userHoursAvailable);
+                },
                 child: Text(
-                  'Disponibilidad',
+                  'Listo'.toUpperCase(),
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'OpenSans',
                     fontSize: 16.0,
@@ -165,227 +385,8 @@ class _HourAvailableState extends State<HourAvailable> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    _buildHourRange(
-                      is08Available,
-                      '00:00 - 08:00',
-                      () {
-                        setState(() {
-                          is08Available = !is08Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is1011Available,
-                      '10:00 - 11:00',
-                      () {
-                        setState(() {
-                          is1011Available = !is1011Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is1213Available,
-                      '12:00 - 13:00',
-                      () {
-                        setState(() {
-                          is1213Available = !is1213Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is1415Available,
-                      '14:00 - 15:00',
-                      () {
-                        setState(() {
-                          is1415Available = !is1415Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is1617Available,
-                      '16:00 - 17:00',
-                      () {
-                        setState(() {
-                          is1617Available = !is1617Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is1819Available,
-                      '18:00 - 19:00',
-                      () {
-                        setState(() {
-                          is1819Available = !is1819Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is2021Available,
-                      '20:00 - 21:00',
-                      () {
-                        setState(() {
-                          is2021Available = !is2021Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is2223Available,
-                      '22:00 - 23:00',
-                      () {
-                        setState(() {
-                          is2223Available = !is2223Available;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    _buildHourRange(
-                      is810Available,
-                      '08:00 - 10:00',
-                      () {
-                        setState(() {
-                          is810Available = !is810Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is1112Available,
-                      '11:00 - 12:00',
-                      () {
-                        setState(() {
-                          is1112Available = !is1112Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is1314Available,
-                      '13:00 - 14:00',
-                      () {
-                        setState(() {
-                          is1314Available = !is1314Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is1516Available,
-                      '15:00 - 16:00',
-                      () {
-                        setState(() {
-                          is1516Available = !is1516Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is1718Available,
-                      '17:00 - 18:00',
-                      () {
-                        setState(() {
-                          is1718Available = !is1718Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is1920Available,
-                      '19:00 - 20:00',
-                      () {
-                        setState(() {
-                          is1920Available = !is1920Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is2122Available,
-                      '21:00 - 22:00',
-                      () {
-                        setState(() {
-                          is2122Available = !is2122Available;
-                        });
-                      },
-                    ),
-                    _buildHourRange(
-                      is2300Available,
-                      '23:00 - 00:00',
-                      () {
-                        setState(() {
-                          is2300Available = !is2300Available;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 20.0),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.green[600],
-                    Colors.green[500],
-                    Colors.green[500],
-                    Colors.green[600],
-                  ],
-                  stops: [0.1, 0.4, 0.7, 0.9],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.green[100],
-                    blurRadius: 10.0,
-                    offset: Offset(0, 8),
-                  ),
-                ],
-                color: Colors.green[400],
-                borderRadius: BorderRadius.all(Radius.circular(30.0)),
-              ),
-              width: _width * .40,
-              height: 50.0,
-              child: Center(
-                child: FlatButton(
-                  splashColor: Colors.transparent,
-                  onPressed: () {
-                    UserHoursAvailable _userHoursAvailable = UserHoursAvailable(
-                      is08Available: is08Available,
-                      is810Available: is810Available,
-                      is1011Available: is1011Available,
-                      is1112Available: is1112Available,
-                      is1213Available: is1213Available,
-                      is1314Available: is1314Available,
-                      is1415Available: is1415Available,
-                      is1516Available: is1516Available,
-                      is1617Available: is1617Available,
-                      is1718Available: is1718Available,
-                      is1819Available: is1819Available,
-                      is1920Available: is1920Available,
-                      is2021Available: is2021Available,
-                      is2122Available: is2122Available,
-                      is2223Available: is2223Available,
-                      is2300Available: is2300Available,
-                    );
-                    Navigator.pop(context, _userHoursAvailable);
-                  },
-                  child: Text(
-                    'Listo'.toUpperCase(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'OpenSans',
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

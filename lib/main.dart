@@ -44,7 +44,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: routes,
         home: CheckAuth(),
-        // home: CheckAuth(),
       ),
     );
   }

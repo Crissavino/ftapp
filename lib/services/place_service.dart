@@ -17,7 +17,7 @@ class Suggestion {
 
   @override
   String toString() {
-    return 'Suggestion(description: $description, placeId: $placeId)';
+    return 'Suggestion(description: $description, placeId: $placeId, details: $details)';
   }
 }
 
@@ -32,21 +32,46 @@ class PlaceApiProvider {
   static final String iosKey = 'YOUR_API_KEY_HERE';
   final apiKey = Environment.googlePlaceApiKey;
 
-  Future<List<Suggestion>> fetchSuggestions(String input) async {
+  Future<List<Suggestion>> fetchSuggestions2(String input) async {
     final lang = Platform.localeName;
     final request =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&language=$lang&key=$apiKey&sessiontoken=$sessionToken';
+    final request2 = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=$input&radius=10000&key=$apiKey';
     final response = await client.get(request);
 
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
 
-      print(result);
-
       if (result['status'] == 'OK') {
         // compose suggestions in a list
         return result['predictions']
-            .map<Suggestion>((p) => Suggestion(p['place_id'], p['description'], UserLocation()))
+            .map<Suggestion>((p) =>
+            Suggestion(p['place_id'], p['description'], UserLocation()))
+            .toList();
+      }
+      if (result['status'] == 'ZERO_RESULTS') {
+        return [];
+      }
+      throw Exception(result['error_message']);
+    } else {
+      throw Exception('Failed to fetch suggestion');
+    }
+  }
+
+  Future<List<Suggestion>> fetchSuggestions(String input) async {
+    final lang = Platform.localeName;
+    final request = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=$input&radius=10000&key=$apiKey';
+    final response = await client.get(request);
+
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+
+      if (result['status'] == 'OK') {
+        // compose suggestions in a list
+        return result['results']
+            .map<Suggestion>((p) =>
+            Suggestion(p['place_id'], p['formatted_address'],
+              UserLocation(lat: p['geometry']['location']['lat'], lng:p['geometry']['location']['lng'],)))
             .toList();
       }
       if (result['status'] == 'ZERO_RESULTS') {
@@ -69,7 +94,8 @@ class PlaceApiProvider {
       if (result['status'] == 'OK') {
         // compose suggestions in a list
         final List<Suggestion> suggestions = result['results']
-            .map<Suggestion>((p) => Suggestion(p['place_id'], p['formatted_address'], UserLocation()))
+            .map<Suggestion>((p) =>
+            Suggestion(p['place_id'], p['formatted_address'], UserLocation(lat: p['geometry']['location']['lat'], lng:p['geometry']['location']['lng'],)))
             .toList();
 
         return suggestions[0];
@@ -102,20 +128,20 @@ class PlaceApiProvider {
 
         final List arrayResult = result['result']['address_components'];
         arrayResult.forEach((element) {
-          if(element['types'].asMap()[0] == 'country') {
+          if (element['types'].asMap()[0] == 'country') {
             country = element['long_name'];
             countryCode = element['short_name'];
           }
 
-          if(element['types'].asMap()[0] == 'administrative_area_level_1') {
+          if (element['types'].asMap()[0] == 'administrative_area_level_1') {
             province = element['long_name'];
             provinceCode = element['short_name'];
           }
 
-          if(element['types'].asMap()[0] == 'administrative_area_level_2') {
+          if (element['types'].asMap()[0] == 'administrative_area_level_2' ||
+              element['types'].asMap()[0] == 'locality') {
             city = element['short_name'];
           }
-
         });
 
         UserLocation userLocation = UserLocation(

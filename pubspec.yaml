@@ -59,7 +59,8 @@ flutter:
     - assets/profile.png
     - assets/profile_cs.jpg
     - assets/logos/facebook.jpg
-    - assets/logos/google.jpg
+    - assets/logos/google.png
+    - assets/logos/apple.png
     - assets/icons/primary/
     - assets/icons/secondary/
 

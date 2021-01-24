@@ -245,6 +245,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
       children: [
         SafeArea(
           top: false,
+          bottom: false,
           child: Scaffold(
             body: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle.light,
@@ -309,26 +310,29 @@ class _ChatsScreenState extends State<ChatsScreen> {
   void _navigateToSection(index) {
     switch (index) {
       case 0:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          SlideBottomRoute(
-            page: PlayNowScreen(),
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => PlayNowScreen(),
+            transitionDuration: Duration(seconds: 0),
           ),
         );
         break;
       case 1:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          SlideBottomRoute(
-            page: MatchesScreen(),
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => MatchesScreen(),
+            transitionDuration: Duration(seconds: 0),
           ),
         );
         break;
       case 3:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          SlideBottomRoute(
-            page: ProfileScreen(),
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => ProfileScreen(),
+            transitionDuration: Duration(seconds: 0),
           ),
         );
         break;
