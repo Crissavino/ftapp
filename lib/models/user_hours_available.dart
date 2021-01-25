@@ -35,6 +35,25 @@ class UserHoursAvailable {
     this.is2300Available,
   });
 
+  factory UserHoursAvailable.fromJson(Map<String, dynamic> json) => UserHoursAvailable(
+    is08Available: json["is08Available"],
+    is810Available: json["is810Available"],
+    is1011Available: json["is1011Available"],
+    is1112Available: json["is1112Available"],
+    is1213Available: json["is1213Available"],
+    is1314Available: json["is1314Available"],
+    is1415Available: json["is1415Available"],
+    is1516Available: json["is1516Available"],
+    is1617Available: json["is1617Available"],
+    is1718Available: json["is1718Available"],
+    is1819Available: json["is1819Available"],
+    is1920Available: json["is1920Available"],
+    is2021Available: json["is2021Available"],
+    is2122Available: json["is2122Available"],
+    is2223Available: json["is2223Available"],
+    is2300Available: json["is2300Available"],
+  );
+
   Map<String, bool> toJson() => {
         "is08Available": is08Available,
         "is810Available": is810Available,

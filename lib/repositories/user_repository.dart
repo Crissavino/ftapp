@@ -183,4 +183,27 @@ class UserRepository {
 
     return body;
   }
+
+  Future<dynamic> editUserDaysAvailable(Map<int, UserHoursAvailable> daysAvailable) async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    User user = User.fromJson(jsonDecode(localStorage.getString('user')));
+
+    final data = {
+      "user_id": user.id,
+      "daysAvailable": UserDaysAvailable().getDataDayAvailable(daysAvailable),
+    };
+
+    final res = await api.postData(data, '/edit-user-days-available');
+
+    final body = json.decode(res.body);
+
+    if (body.containsKey('success') && body['success'] == true) {
+      await localStorage.setString('user', json.encode(body['user']));
+      await localStorage.setString('userDaysAvailables', json.encode(body['user']['days_availables']));
+    }
+
+    return body;
+  }
+
+
 }

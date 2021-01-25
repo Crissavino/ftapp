@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:app/models/database/days_available.dart';
 import 'package:app/models/database/position.dart';
 import 'package:app/models/database/user.dart';
+import 'package:app/models/user_days_available.dart';
 import 'package:app/repositories/user_repository.dart';
 import 'package:app/ui/chats/chats_screen.dart';
 import 'package:app/ui/matches/matches_screen.dart';
 import 'package:app/ui/play_now/play_now_screen.dart';
+import 'package:app/ui/widgets/your_available.dart';
 import 'package:app/ui/widgets/your_positions.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/slide_bottom_route.dart';
@@ -22,6 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   UserRepository _userRepository = UserRepository();
   User user;
   List<Position> userPositions;
+  List<DaysAvailable> _userDaysAvailable;
 
   // text field state
   String localeName = Platform.localeName.split('_')[0];
@@ -34,6 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<User> _loadUserData() async {
     this.user = await _userRepository.getUser();
     this.userPositions = await _userRepository.getUserPositions();
+    this._userDaysAvailable = await _userRepository.getUserDaysAvailables();
 
     return this.user;
   }
@@ -46,168 +51,159 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Stack(
       children: [
         FutureBuilder(
-          future: _loadUserData(),
-            builder: (BuildContext context, AsyncSnapshot<User>snapshot) {
-            print('gol');
-          if(snapshot.hasData) {
-            return SafeArea(
-              top: false,
-              bottom: false,
-              child: Scaffold(
-                body: AnnotatedRegion<SystemUiOverlayStyle>(
-                  value: SystemUiOverlayStyle.light,
-                  child: Center(
-                    child: Container(
-                      height: _height,
-                      decoration: horizontalGradient,
-                      padding: EdgeInsets.only(top: 25.0),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double innerHeight = constraints.maxHeight;
-                          double innerWidth = constraints.maxWidth;
+            future: _loadUserData(),
+            builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+              if (snapshot.hasData) {
+                return SafeArea(
+                  top: false,
+                  bottom: false,
+                  child: Scaffold(
+                    body: AnnotatedRegion<SystemUiOverlayStyle>(
+                      value: SystemUiOverlayStyle.light,
+                      child: Center(
+                        child: Container(
+                          height: _height,
+                          decoration: horizontalGradient,
+                          padding: EdgeInsets.only(top: 25.0),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              double innerHeight = constraints.maxHeight;
+                              double innerWidth = constraints.maxWidth;
 
-                          return SafeArea(
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                Positioned(
-                                  bottom: 0.0,
-                                  left: 0.0,
-                                  right: 0.0,
-                                  child: Container(
-                                    height: innerHeight * 0.87,
-                                    width: innerWidth,
-                                    decoration: BoxDecoration(
-                                      borderRadius: screenBorders,
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black12,
-                                          blurRadius: 6.0,
-                                          offset: Offset(0, -2),
+                              return SafeArea(
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Positioned(
+                                      bottom: 0.0,
+                                      left: 0.0,
+                                      right: 0.0,
+                                      child: Container(
+                                        height: innerHeight * 0.87,
+                                        width: innerWidth,
+                                        decoration: BoxDecoration(
+                                          borderRadius: screenBorders,
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 6.0,
+                                              offset: Offset(0, -2),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                        child: Column(
+                                          children: [
+                                            SizedBox(height: 75.0),
+                                            _buildUserName(),
+                                            SizedBox(height: 35.0),
+                                            _buildUserReviews(innerWidth),
+                                            SizedBox(height: 35.0),
+                                            _buildUserPositions(innerWidth),
+                                            SizedBox(height: 15.0),
+                                            _buildUserDaysAvailable(innerWidth),
+                                            Expanded(
+                                              child: Container(),
+                                            ),
+                                            _buildLogOutButton(),
+                                            SizedBox(height: 20.0),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(height: 75.0),
-                                        _buildUserName(),
-                                        SizedBox(height: 35.0),
-                                        _buildUserReviews(innerWidth),
-                                        SizedBox(height: 35.0),
-                                        _buildUserPositions(innerWidth),
-                                        Expanded(child: Container(),),
-                                        _buildLogOutButton(),
-                                        SizedBox(height: 20.0),
-                                      ],
+                                    Positioned(
+                                      top: 0.0,
+                                      left: 0.0,
+                                      right: 0.0,
+                                      child: Center(
+                                        child: CircleAvatar(
+                                          radius: 60,
+                                          backgroundImage: AssetImage(
+                                              'assets/profile_cs.jpg'),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                                Positioned(
-                                  top: 0.0,
-                                  left: 0.0,
-                                  right: 0.0,
-                                  child: Center(
-                                    child: CircleAvatar(
-                                      radius: 60,
-                                      backgroundImage:
-                                      AssetImage('assets/profile_cs.jpg'),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
+                    bottomNavigationBar: _buildBottomNavigationBarRounded(),
                   ),
-                ),
-                bottomNavigationBar: _buildBottomNavigationBarRounded(),
-              ),
-            );
-          } else {
+                );
+              } else {
+                return SafeArea(
+                  top: false,
+                  bottom: false,
+                  child: Scaffold(
+                    body: AnnotatedRegion<SystemUiOverlayStyle>(
+                      value: SystemUiOverlayStyle.light,
+                      child: Center(
+                        child: Container(
+                          height: _height,
+                          decoration: horizontalGradient,
+                          padding: EdgeInsets.only(top: 25.0),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              double innerHeight = constraints.maxHeight;
+                              double innerWidth = constraints.maxWidth;
 
-            return SafeArea(
-              top: false,
-              bottom: false,
-              child: Scaffold(
-                body: AnnotatedRegion<SystemUiOverlayStyle>(
-                  value: SystemUiOverlayStyle.light,
-                  child: Center(
-                    child: Container(
-                      height: _height,
-                      decoration: horizontalGradient,
-                      padding: EdgeInsets.only(top: 25.0),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double innerHeight = constraints.maxHeight;
-                          double innerWidth = constraints.maxWidth;
-
-                          return SafeArea(
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                Positioned(
-                                  bottom: 0.0,
-                                  left: 0.0,
-                                  right: 0.0,
-                                  child: Container(
-                                    height: innerHeight * 0.87,
-                                    width: innerWidth,
-                                    decoration: BoxDecoration(
-                                      borderRadius: screenBorders,
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black12,
-                                          blurRadius: 6.0,
-                                          offset: Offset(0, -2),
+                              return SafeArea(
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Positioned(
+                                      bottom: 0.0,
+                                      left: 0.0,
+                                      right: 0.0,
+                                      child: Container(
+                                        height: innerHeight * 0.87,
+                                        width: innerWidth,
+                                        decoration: BoxDecoration(
+                                          borderRadius: screenBorders,
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 6.0,
+                                              offset: Offset(0, -2),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [],
+                                        ),
+                                      ),
                                     ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-
-                                      ],
+                                    Positioned(
+                                      top: 0.0,
+                                      left: 0.0,
+                                      right: 0.0,
+                                      child: Center(
+                                        child: CircleAvatar(
+                                          radius: 60,
+                                          backgroundImage: null,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                                Positioned(
-                                  top: 0.0,
-                                  left: 0.0,
-                                  right: 0.0,
-                                  child: Center(
-                                    child: CircleAvatar(
-                                      radius: 60,
-                                      backgroundImage: null,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
+                    bottomNavigationBar: _buildBottomNavigationBarRounded(),
                   ),
-                ),
-                bottomNavigationBar: _buildBottomNavigationBarRounded(),
-              ),
-            );
-            return Container(
-              decoration: verticalGradient,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  whiteCircularLoading
-                ],
-              ),
-            );
-          }
-        }),
+                );
+              }
+            }),
       ],
     );
   }
@@ -215,21 +211,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _buildUserPositions(innerWidth) {
     return GestureDetector(
       child: Container(
-          width: innerWidth * .95,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 6.0,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
+        width: innerWidth * .95,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6.0,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
         child: ListTile(
           title: Text('Tus posiciones'),
-          trailing: Icon(Icons.keyboard_arrow_up_outlined, size: 40.0,),
+          trailing: Icon(
+            Icons.keyboard_arrow_up_outlined,
+            size: 40.0,
+          ),
         ),
       ),
       onTap: () {
@@ -239,7 +238,146 @@ class _ProfileScreenState extends State<ProfileScreen> {
           enableDrag: true,
           isScrollControlled: true,
           builder: (BuildContext context) {
-            return YourPositions(userPositions: this.userPositions,);
+            return YourPositions(
+              userPositions: this.userPositions,
+            );
+          },
+        );
+      },
+    );
+
+    return Container(
+      width: innerWidth * .95,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6.0,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.symmetric(vertical: 10.0),
+            child: Text('Pisiciones'),
+          ),
+          Container(
+            margin: EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.red,
+                  ),
+                  width: innerWidth * .43,
+                  height: 60.0,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.red,
+                  ),
+                  width: innerWidth * .43,
+                  height: 60.0,
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.red,
+                  ),
+                  width: innerWidth * .43,
+                  height: 60.0,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.red,
+                  ),
+                  width: innerWidth * .43,
+                  height: 60.0,
+                ),
+              ],
+            ),
+          ),
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: FlatButton(
+                onPressed: () {
+                  print('Editar posicion');
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.edit,
+                      color: Colors.blue,
+                    ),
+                    SizedBox(
+                      width: 8.0,
+                    ),
+                    Text('Editar'),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  _buildUserDaysAvailable(innerWidth) {
+    return GestureDetector(
+      child: Container(
+        width: innerWidth * .95,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6.0,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: ListTile(
+          title: Text('Tu disponibilidad'),
+          trailing: Icon(
+            Icons.keyboard_arrow_up_outlined,
+            size: 40.0,
+          ),
+        ),
+      ),
+      onTap: () {
+        showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          enableDrag: true,
+          isScrollControlled: true,
+          builder: (BuildContext context) {
+            return YourAvailable(
+              userDaysAvailable: this._userDaysAvailable,
+            );
           },
         );
       },

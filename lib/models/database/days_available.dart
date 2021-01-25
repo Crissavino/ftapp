@@ -20,7 +20,7 @@ class DaysAvailable {
   factory DaysAvailable.fromJson(Map<String, dynamic> json) => DaysAvailable(
     id: json["id"],
     dayOfTheWeek: json["dayOfTheWeek"],
-    available: json["available"],
+    available: json["available"] == 'null' ? null : json["available"],
     userId: json["user_id"],
     deletedAt: json["deleted_at"],
     createdAt: DateTime.parse(json["created_at"]),
