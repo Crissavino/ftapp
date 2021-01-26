@@ -1,17 +1,18 @@
 import 'dart:io';
 
 import 'package:app/models/database/days_available.dart';
+import 'package:app/models/database/location.dart';
 import 'package:app/models/database/position.dart';
 import 'package:app/models/database/user.dart';
-import 'package:app/models/user_days_available.dart';
+import 'package:app/models/user_location.dart';
 import 'package:app/repositories/user_repository.dart';
 import 'package:app/ui/chats/chats_screen.dart';
 import 'package:app/ui/matches/matches_screen.dart';
 import 'package:app/ui/play_now/play_now_screen.dart';
 import 'package:app/ui/widgets/your_available.dart';
+import 'package:app/ui/widgets/your_location.dart';
 import 'package:app/ui/widgets/your_positions.dart';
 import 'package:app/utils/constants.dart';
-import 'package:app/utils/slide_bottom_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -24,8 +25,9 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   UserRepository _userRepository = UserRepository();
   User user;
-  List<Position> userPositions;
+  List<Position> _userPositions;
   List<DaysAvailable> _userDaysAvailable;
+  Location _userLocation;
 
   // text field state
   String localeName = Platform.localeName.split('_')[0];
@@ -37,8 +39,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<User> _loadUserData() async {
     this.user = await _userRepository.getUser();
-    this.userPositions = await _userRepository.getUserPositions();
+    this._userPositions = await _userRepository.getUserPositions();
     this._userDaysAvailable = await _userRepository.getUserDaysAvailables();
+    this._userLocation = await _userRepository.getUserLocation();
 
     return this.user;
   }
@@ -102,6 +105,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             _buildUserPositions(innerWidth),
                                             SizedBox(height: 15.0),
                                             _buildUserDaysAvailable(innerWidth),
+                                            SizedBox(height: 15.0),
+                                            _buildUserLocation(innerWidth),
                                             Expanded(
                                               child: Container(),
                                             ),
@@ -239,7 +244,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           isScrollControlled: true,
           builder: (BuildContext context) {
             return YourPositions(
-              userPositions: this.userPositions,
+              userPositions: this._userPositions,
             );
           },
         );
@@ -382,103 +387,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
 
-    return Container(
-      width: innerWidth * .95,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6.0,
-            offset: Offset(0, 2),
+  _buildUserLocation(innerWidth) {
+    return GestureDetector(
+      child: Container(
+        width: innerWidth * .95,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6.0,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: ListTile(
+          title: Text('Tu lugar donde jugas'),
+          trailing: Icon(
+            Icons.keyboard_arrow_up_outlined,
+            size: 40.0,
           ),
-        ],
+        ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(vertical: 10.0),
-            child: Text('Pisiciones'),
-          ),
-          Container(
-            margin: EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.red,
-                  ),
-                  width: innerWidth * .43,
-                  height: 60.0,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.red,
-                  ),
-                  width: innerWidth * .43,
-                  height: 60.0,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.red,
-                  ),
-                  width: innerWidth * .43,
-                  height: 60.0,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.red,
-                  ),
-                  width: innerWidth * .43,
-                  height: 60.0,
-                ),
-              ],
-            ),
-          ),
-          Center(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: FlatButton(
-                onPressed: () {
-                  print('Editar posicion');
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.edit,
-                      color: Colors.blue,
-                    ),
-                    SizedBox(
-                      width: 8.0,
-                    ),
-                    Text('Editar'),
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
+      onTap: () {
+        showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          enableDrag: true,
+          isScrollControlled: true,
+          builder: (BuildContext context) {
+            return YourLocation(
+              userLocation: this._userLocation,
+            );
+          },
+        );
+      },
     );
   }
 

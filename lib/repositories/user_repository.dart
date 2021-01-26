@@ -205,5 +205,26 @@ class UserRepository {
     return body;
   }
 
+  Future<dynamic> editUserLocation(UserLocation userLocationDetails) async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    User user = User.fromJson(jsonDecode(localStorage.getString('user')));
+
+    final data = {
+      "user_id": user.id,
+      "userLocationDetails": userLocationDetails.toJson(),
+    };
+
+    final res = await api.postData(data, '/edit-user-location');
+
+    final body = json.decode(res.body);
+
+    if (body.containsKey('success') && body['success'] == true) {
+      await localStorage.setString('user', json.encode(body['user']));
+      await localStorage.setString('userLocation', json.encode(body['user']['location']));
+    }
+
+    return body;
+  }
+
 
 }

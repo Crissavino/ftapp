@@ -52,6 +52,7 @@ class SearchLocation extends SearchDelegate<Suggestion> {
               if (state is ProfileCompleteLoadingUserLocationState) {
                 return Container(
                   width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,6 +95,7 @@ class SearchLocation extends SearchDelegate<Suggestion> {
                     if (state is ProfileCompleteLoadingUserLocationState) {
                       return Container(
                         width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -130,6 +132,7 @@ class SearchLocation extends SearchDelegate<Suggestion> {
                 )
               : Container(
                   width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

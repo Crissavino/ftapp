@@ -381,8 +381,6 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
             setState(() {
               userLocationDesc = result.description;
               userLocationDetails = result.details;
-              print(userLocationDetails.lat);
-              print(userLocationDetails.lng);
             });
           }
         },
