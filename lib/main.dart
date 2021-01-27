@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app/bloc/complete_profile/complete_profile_bloc.dart';
 import 'package:app/bloc/login/login_bloc.dart';
+import 'package:app/bloc/profile/profile_bloc.dart';
 import 'package:app/bloc/register/register_bloc.dart';
 import 'package:app/models/database/user.dart';
 import 'package:app/routes.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => RegisterBloc(),),
         BlocProvider(create: (_) => LoginBloc(),),
         BlocProvider(create: (_) => CompleteProfileBloc(),),
+        BlocProvider(create: (_) => ProfileBloc(),),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

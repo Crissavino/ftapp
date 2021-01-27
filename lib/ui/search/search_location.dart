@@ -1,3 +1,4 @@
+import 'package:app/bloc/profile/profile_bloc.dart';
 import 'package:app/models/user_location.dart';
 import 'package:app/repositories/location_repository.dart';
 import 'package:app/repositories/user_repository.dart';

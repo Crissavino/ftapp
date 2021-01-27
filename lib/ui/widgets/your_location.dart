@@ -1,4 +1,5 @@
 import 'package:app/bloc/complete_profile/complete_profile_bloc.dart';
+import 'package:app/bloc/profile/profile_bloc.dart';
 import 'package:app/models/database/location.dart';
 import 'package:app/models/user_location.dart';
 import 'package:app/repositories/user_repository.dart';
@@ -41,8 +42,8 @@ class _YourLocationState extends State<YourLocation> {
           await showSearch(context: context, delegate: SearchLocation());
 
           if (result != null) {
-            BlocProvider.of<CompleteProfileBloc>(context).add(
-                ProfileCompleteUserLocationLoadedEvent()
+            BlocProvider.of<ProfileBloc>(context).add(
+                ProfileUserLocationLoadedEvent()
             );
             setState(() {
               userLocationDesc = result.description;
@@ -50,62 +51,43 @@ class _YourLocationState extends State<YourLocation> {
             });
           }
         },
-        child: BlocBuilder<CompleteProfileBloc, CompleteProfileState>(
-          builder: (BuildContext context, state) {
-
-            print('entra');
-            print(state);
-            if (state is ProfileCompleteLoadingUserLocationState) {
-              return Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    circularLoading
-                  ],
-                ),
-              );
-            }
-
-            return Container(
-              margin: EdgeInsets.only(top: 20.0),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.blue[600],
-                    Colors.blue[500],
-                    Colors.blue[500],
-                    Colors.blue[600],
-                  ],
-                  stops: [0.1, 0.4, 0.7, 0.9],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.blue[100],
-                    blurRadius: 10.0,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-                color: Colors.blue[400],
-                borderRadius: BorderRadius.all(Radius.circular(30.0)),
+        child: Container(
+          margin: EdgeInsets.only(top: 20.0),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.blue[600],
+                Colors.blue[500],
+                Colors.blue[500],
+                Colors.blue[600],
+              ],
+              stops: [0.1, 0.4, 0.7, 0.9],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blue[100],
+                blurRadius: 10.0,
+                offset: Offset(0, 5),
               ),
-              width: _width * .60,
-              height: 50.0,
-              child: Center(
-                child: Text(
-                  'Cambiar ubicacion',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'OpenSans',
-                    fontSize: 16.0,
-                  ),
-                ),
+            ],
+            color: Colors.blue[400],
+            borderRadius: BorderRadius.all(Radius.circular(30.0)),
+          ),
+          width: _width * .60,
+          height: 50.0,
+          child: Center(
+            child: Text(
+              'Cambiar ubicacion',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'OpenSans',
+                fontSize: 16.0,
               ),
-            );
-          },
+            ),
+          ),
         ),
       );
     }
@@ -126,104 +108,119 @@ class _YourLocationState extends State<YourLocation> {
             left: 20.0,
             right: 20.0,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                ),
-                width: double.infinity,
-                child: Center(
-                  child: Text(
-                    userLocationDesc.isEmpty ? 'Ubicacion...' : userLocationDesc,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold
+          child: BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (BuildContext context, state) {
+
+              if (state is ProfileLoadingState) {
+                return Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      circularLoading
+                    ],
+                  ),
+                );
+              }
+
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                    ),
+                    width: double.infinity,
+                    child: Center(
+                      child: Text(
+                        userLocationDesc,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Column(
-                children: [
-                  _buildSearchLocationBar(),
-                  SizedBox(height: 10.0,),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.green[600],
-                          Colors.green[500],
-                          Colors.green[500],
-                          Colors.green[600],
-                        ],
-                        stops: [0.1, 0.4, 0.7, 0.9],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.green[100],
-                          blurRadius: 10.0,
-                          offset: Offset(0, 5),
+                  Column(
+                    children: [
+                      _buildSearchLocationBar(),
+                      SizedBox(height: 10.0,),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.green[600],
+                              Colors.green[500],
+                              Colors.green[500],
+                              Colors.green[600],
+                            ],
+                            stops: [0.1, 0.4, 0.7, 0.9],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.green[100],
+                              blurRadius: 10.0,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                          color: Colors.green[400],
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
                         ),
-                      ],
-                      color: Colors.green[400],
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    ),
-                    width: _width * .40,
-                    height: 50.0,
-                    child: Center(
-                      child: FlatButton(
-                        splashColor: Colors.transparent,
-                        onPressed: () async {
+                        width: _width * .40,
+                        height: 50.0,
+                        child: Center(
+                          child: FlatButton(
+                            splashColor: Colors.transparent,
+                            onPressed: () async {
 
-                          if (userLocationDetails == null) {
-                            return Navigator.pop(context);
-                          }
+                              if (userLocationDetails == null) {
+                                return Navigator.pop(context);
+                              }
 
-                          final editUserLocationResponse =
-                          await UserRepository().editUserLocation(
-                            userLocationDetails,
-                          );
+                              BlocProvider.of<ProfileBloc>(context).add(
+                                  ProfileLoadingEvent()
+                              );
+                              final editUserLocationResponse =
+                              await UserRepository().editUserLocation(
+                                userLocationDetails,
+                              );
 
-                          print(userLocationDetails);
-                          print(userLocationDetails.city);
-                          print(userLocationDetails.lat);
-                          print(userLocationDetails.lng);
+                              if (editUserLocationResponse['success'] == true) {
+                                Navigator.pop(context, true);
 
-                          // if (true) {
-                          //   Navigator.pop(context);
-
-                            // BlocProvider.of<CompleteProfileBloc>(context).add(
-                            //     ProfileCompletedEvent()
-                            // );
-                          // } else {
-                            // BlocProvider.of<CompleteProfileBloc>(context).add(
-                            //     ProfileErrorEvent()
-                            // );
-                            // return showAlert(
-                            //   context,
-                            //   'Error!',
-                            //   'Ocurrió un error al guardar las posiciones!',
-                            // );
-                          // }
-                        },
-                        child: Text(
-                          'Listo'.toUpperCase(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'OpenSans',
-                            fontSize: 16.0,
+                                BlocProvider.of<ProfileBloc>(context).add(
+                                    ProfileCompleteEvent()
+                                );
+                              } else {
+                                BlocProvider.of<ProfileBloc>(context).add(
+                                    ProfileErrorEvent()
+                                );
+                                return showAlert(
+                                  context,
+                                  'Error!',
+                                  'Ocurrió un error al guardar tu ubicacion!',
+                                );
+                              }
+                            },
+                            child: Text(
+                              'Listo'.toUpperCase(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'OpenSans',
+                                fontSize: 16.0,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
+                    ],
+                  )
                 ],
-              )
-            ],
+              );
+            },
           ),
         ),
     );

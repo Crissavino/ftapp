@@ -12,6 +12,7 @@ import 'package:app/ui/play_now/play_now_screen.dart';
 import 'package:app/ui/widgets/your_available.dart';
 import 'package:app/ui/widgets/your_location.dart';
 import 'package:app/ui/widgets/your_positions.dart';
+import 'package:app/ui/widgets/your_settings.dart';
 import 'package:app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -96,22 +97,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ],
                                         ),
                                         child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            SizedBox(height: 75.0),
+                                            SizedBox(height: 55.0),
                                             _buildUserName(),
-                                            SizedBox(height: 35.0),
+                                            SizedBox(height: 5.0),
                                             _buildUserReviews(innerWidth),
-                                            SizedBox(height: 35.0),
+                                            SizedBox(height: 5.0),
                                             _buildUserPositions(innerWidth),
-                                            SizedBox(height: 15.0),
+                                            SizedBox(height: 5.0),
                                             _buildUserDaysAvailable(innerWidth),
-                                            SizedBox(height: 15.0),
+                                            SizedBox(height: 5.0),
                                             _buildUserLocation(innerWidth),
-                                            Expanded(
-                                              child: Container(),
-                                            ),
+                                            SizedBox(height: 5.0),
+                                            _buildUserSettings(innerWidth),
+                                            SizedBox(height: 10.0),
                                             _buildLogOutButton(),
-                                            SizedBox(height: 20.0),
+                                            SizedBox(height: 10.0),
                                           ],
                                         ),
                                       ),
@@ -229,15 +231,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         child: ListTile(
-          title: Text('Tus posiciones'),
+          title: Text('Posiciones'),
           trailing: Icon(
             Icons.keyboard_arrow_up_outlined,
             size: 40.0,
           ),
         ),
       ),
-      onTap: () {
-        showModalBottomSheet(
+      onTap: () async {
+        final wasSavedData = await showModalBottomSheet(
           backgroundColor: Colors.transparent,
           context: context,
           enableDrag: true,
@@ -248,6 +250,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           },
         );
+
+        if (wasSavedData == true) {
+          this._userPositions = await _userRepository.getUserPositions();
+        }
       },
     );
 
@@ -366,15 +372,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         child: ListTile(
-          title: Text('Tu disponibilidad'),
+          title: Text('Disponibilidad'),
           trailing: Icon(
             Icons.keyboard_arrow_up_outlined,
             size: 40.0,
           ),
         ),
       ),
-      onTap: () {
-        showModalBottomSheet(
+      onTap: () async {
+        final wasSavedData = await showModalBottomSheet(
           backgroundColor: Colors.transparent,
           context: context,
           enableDrag: true,
@@ -385,6 +391,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           },
         );
+
+        if (wasSavedData == true) {
+          this._userDaysAvailable = await _userRepository.getUserDaysAvailables();
+        }
       },
     );
   }
@@ -405,7 +415,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         child: ListTile(
-          title: Text('Tu lugar donde jugas'),
+          title: Text('Lugar donde jugas'),
+          trailing: Icon(
+            Icons.keyboard_arrow_up_outlined,
+            size: 40.0,
+          ),
+        ),
+      ),
+      onTap: () async {
+        final wasSavedData = await showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          enableDrag: true,
+          isScrollControlled: true,
+          builder: (BuildContext context) {
+            return YourLocation(
+              userLocation: this._userLocation,
+            );
+          },
+        );
+
+        if (wasSavedData == true) {
+          this._userLocation = await _userRepository.getUserLocation();
+        }
+      },
+    );
+  }
+
+  _buildUserSettings(innerWidth) {
+    return GestureDetector(
+      child: Container(
+        width: innerWidth * .95,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6.0,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: ListTile(
+          title: Text('Configuración'),
           trailing: Icon(
             Icons.keyboard_arrow_up_outlined,
             size: 40.0,
@@ -419,9 +472,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           enableDrag: true,
           isScrollControlled: true,
           builder: (BuildContext context) {
-            return YourLocation(
-              userLocation: this._userLocation,
-            );
+            return YourSettings();
           },
         );
       },
@@ -502,8 +553,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (index != 3) {
           _navigateToSection(index);
         }
-        print(index);
-        // Navigator.pushReplacementNamed(context, 'profile');
       },
       items: [
         BottomNavigationBarItem(

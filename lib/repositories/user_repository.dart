@@ -53,6 +53,9 @@ class UserRepository {
       SharedPreferences localStorage = await SharedPreferences.getInstance();
       await localStorage.setString('token', json.encode(body['token']));
       await localStorage.setString('user', json.encode(body['user']));
+      await localStorage.setString('userPositions', json.encode(body['user']['positions']));
+      await localStorage.setString('userDaysAvailables', json.encode(body['user']['days_availables']));
+      await localStorage.setString('userLocation', json.encode(body['user']['location']));
       body['user'] = User.fromJson(jsonDecode(localStorage.getString('user')));
     }
 
