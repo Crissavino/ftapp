@@ -1,9 +1,15 @@
+import 'package:app/models/database/user.dart';
+import 'package:app/models/user_hours_available.dart';
+import 'package:app/models/user_positions.dart';
+import 'package:app/repositories/play_now_repository.dart';
 import 'package:app/ui/chats/chats_screen.dart';
 import 'package:app/ui/matches/matches_screen.dart';
 import 'package:app/ui/profiles/profile_screen.dart';
+import 'package:app/ui/profiles/public_profile_screen.dart';
 import 'package:app/ui/widgets/create_play_now_post.dart';
+import 'package:app/ui/widgets/play_now_filter.dart';
 import 'package:app/utils/constants.dart';
-import 'package:app/utils/slide_bottom_route.dart';
+import 'package:app/utils/show_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,6 +20,56 @@ class PlayNowScreen extends StatefulWidget {
 
 class _PlayNowScreenState extends State<PlayNowScreen> {
   dynamic search = '';
+  PlayNowRepository _playNowRepository = PlayNowRepository();
+  UserPositions positions;
+  Map<int, UserHoursAvailable> daysAvailable;
+  List<dynamic> playersOffer;
+  bool isMale;
+  bool isMix;
+  int range;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    this.isMale = true;
+    this.isMix = false;
+    this.range = 20;
+    this.positions = UserPositions(
+      goalKeeper: true,
+      defense: true,
+      midfielder: true,
+      forward: true,
+    );
+    UserHoursAvailable emptyUserHoursAvailable = UserHoursAvailable(
+      is08Available: true,
+      is810Available: true,
+      is1011Available: true,
+      is1112Available: true,
+      is1213Available: true,
+      is1314Available: true,
+      is1415Available: true,
+      is1516Available: true,
+      is1617Available: true,
+      is1718Available: true,
+      is1819Available: true,
+      is1920Available: true,
+      is2021Available: true,
+      is2122Available: true,
+      is2223Available: true,
+      is2300Available: true,
+    );
+    this.daysAvailable = {
+      0: emptyUserHoursAvailable,
+      1: emptyUserHoursAvailable,
+      2: emptyUserHoursAvailable,
+      3: emptyUserHoursAvailable,
+      4: emptyUserHoursAvailable,
+      5: emptyUserHoursAvailable,
+      6: emptyUserHoursAvailable,
+    };
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +83,7 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
+            margin: EdgeInsets.only(top: 10.0),
             height: 30.0,
             width: width * 0.82,
             decoration: BoxDecoration(
@@ -62,19 +119,21 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
             ),
           ),
           Container(
+            margin: EdgeInsets.only(top: 10.0),
             child: IconButton(
-              icon: Icon(Icons.add_circle_outline),
+              icon: Icon(Icons.filter_list),
               iconSize: 30.0,
               color: Colors.white,
               onPressed: () {
                 showModalBottomSheet(
-                    backgroundColor: Colors.transparent,
-                    context: context,
-                    enableDrag: true,
-                    isScrollControlled: true,
-                    builder: (BuildContext context) {
-                      return CreatePlayNowPost();
-                    },);
+                  backgroundColor: Colors.transparent,
+                  context: context,
+                  enableDrag: true,
+                  isScrollControlled: true,
+                  builder: (BuildContext context) {
+                    return PlayNowFilter();
+                  },
+                );
                 print('Crear un post para jugar');
               },
             ),
@@ -97,6 +156,9 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
                   child: LayoutBuilder(
                     builder:
                         (BuildContext context, BoxConstraints constraints) {
+                          double innerHeight = constraints.maxHeight;
+                          double innerWidth = constraints.maxWidth;
+
                       return Stack(
                         fit: StackFit.expand,
                         children: [
@@ -132,70 +194,51 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
                               margin: EdgeInsets.only(top: 20.0),
                               width: _width,
                               height: _height,
-                              child: ListView(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      print('Ir al perfil publico del jugador');
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            Colors.green[600],
-                                            Colors.green[500],
-                                            Colors.green[500],
-                                            Colors.green[600],
-                                          ],
-                                          stops: [0.1, 0.4, 0.7, 0.9],
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.green[100],
-                                            blurRadius: 10.0,
-                                            offset: Offset(0, 8),
-                                          ),
-                                        ],
-                                        color: Colors.green[400],
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(30.0)),
-                                      ),
+                              child: FutureBuilder(
+                                future: _playNowRepository.getUserOffers(
+                                  this.range,
+                                  this.isMale,
+                                  this.isMix,
+                                  this.positions,
+                                  daysAvailable,
+                                ),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<dynamic> snapshot) {
+                                  return Container(
+                                    width: _width,
+                                    height: _height,
+                                  );
+
+                                  if (!snapshot.hasData) {
+                                    return Container(
                                       width: _width,
-                                      height: 80.0,
-                                      child: Center(
-                                        child: ListTile(
-                                          leading: CircleAvatar(
-                                            radius: 30.0,
-                                            backgroundColor: Colors.white,
-                                            child: Icon(
-                                              Icons.person,
-                                              color: Colors.green[700],
-                                              size: 40.0,
-                                            ),
-                                          ),
-                                          title: Text(
-                                            'Jugador 1',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          trailing: Icon(
-                                            Icons.keyboard_arrow_right,
-                                            color: Colors.white,
-                                            size: 40.0,
-                                          ),
-                                        ),
+                                      height: _height,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [circularLoading],
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
-                                ],
+                                    );
+                                  }
+
+                                  dynamic response = snapshot.data;
+                                  if (response['success']) {
+                                    List<dynamic> users = response['users'];
+                                    return ListView.builder(
+                                      itemCount: users.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return _buildPlayNowRow(users[index]);
+                                      },
+                                    );
+                                  } else {
+                                    return showAlert(
+                                      context,
+                                      'Error!',
+                                      'Ocurrió un error cargar los jugadores!',
+                                    );
+                                  }
+
+                                },
                               ),
                             ),
                           ),
@@ -213,7 +256,7 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
     );
   }
 
-  void _navigateToSection(index){
+  void _navigateToSection(index) {
     switch (index) {
       case 1:
         Navigator.pushReplacement(
@@ -292,4 +335,76 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
       ],
     );
   }
+
+  Widget _buildPlayNowRow(dynamic userJson) {
+    User user = User.fromJson(userJson);
+    final _width = MediaQuery.of(context).size.width;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PublicProfile(
+            user: user,
+          )),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 20.0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.green[600],
+              Colors.green[500],
+              Colors.green[500],
+              Colors.green[600],
+            ],
+            stops: [0.1, 0.4, 0.7, 0.9],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.green[100],
+              blurRadius: 6.0,
+              offset: Offset(0, 4),
+            ),
+          ],
+          color: Colors.green[400],
+          borderRadius: BorderRadius.all(
+            Radius.circular(30.0),
+          ),
+        ),
+        width: _width,
+        height: 80.0,
+        child: Center(
+          child: ListTile(
+            leading: CircleAvatar(
+              radius: 30.0,
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.person,
+                color: Colors.green[700],
+                size: 40.0,
+              ),
+            ),
+            title: Text(
+              user.name,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            trailing: Icon(
+              Icons.keyboard_arrow_right,
+              color: Colors.white,
+              size: 40.0,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 }

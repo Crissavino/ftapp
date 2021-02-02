@@ -1282,7 +1282,6 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                     curve: Curves.linear);
               },
               onDoneTap: () async {
-                print('tap');
                 bool noPositionSelected = (!_gkPos && !_defPos && !_mfPos && !_forPos);
                 bool noDaysSelected = (
                     this._userDaysAvailable.daysAvailable[0] == null &&

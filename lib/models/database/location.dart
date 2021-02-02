@@ -7,6 +7,8 @@ class Location {
     this.province,
     this.provinceCode,
     this.city,
+    this.lat,
+    this.lng,
     this.deletedAt,
     this.createdAt,
     this.updatedAt,
@@ -22,6 +24,8 @@ class Location {
   dynamic deletedAt;
   DateTime createdAt;
   DateTime updatedAt;
+  dynamic lat;
+  dynamic lng;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
     id: json["id"],
@@ -31,6 +35,8 @@ class Location {
     province: json["province"],
     provinceCode: json["provinceCode"],
     city: json["city"],
+    lat: json["lat"],
+    lng: json["lng"],
     deletedAt: json["deleted_at"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
@@ -44,6 +50,8 @@ class Location {
     "province": province,
     "provinceCode": provinceCode,
     "city": city,
+    "lat": lat,
+    "lng": lng,
     "deleted_at": deletedAt,
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),

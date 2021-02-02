@@ -142,6 +142,25 @@ class UserRepository {
     return body;
   }
 
+  Future<dynamic> getUserData(
+      int userId,
+      ) async {
+
+    final data = {
+      "user_id": userId,
+    };
+
+    final res = await api.postData(data, '/get-user-data');
+
+    final body = json.decode(res.body);
+
+    if (body.containsKey('success') && body['success'] == true) {
+
+    }
+
+    return body;
+  }
+
   Future<List<Position>> getUserPositions() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     List<Position> userPositions = [];
