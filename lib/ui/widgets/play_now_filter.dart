@@ -14,6 +14,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class PlayNowFilter extends StatefulWidget {
+
+  UserDaysAvailable searchedDaysAvailable;
+
+  PlayNowFilter({Key key, this.searchedDaysAvailable}) : super(key: key);
+
   @override
   _PlayNowFilterState createState() => _PlayNowFilterState();
 }
@@ -22,7 +27,6 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
   UserRepository _userRepository = UserRepository();
   UserPositions searchedPositions;
   UserDaysAvailable _userDaysAvailable;
-  dynamic _userDaysAvailable2;
   bool isMale;
   bool isMix;
   int range;
@@ -33,135 +37,14 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
 
   @override
   void initState() {
-    this._userDaysAvailable = UserDaysAvailable();
-    this._userDaysAvailable.daysAvailable[0] = UserHoursAvailable(
-      is08Available: true,
-      is810Available: true,
-      is1011Available: true,
-      is1112Available: true,
-      is1213Available: true,
-      is1314Available: true,
-      is1415Available: true,
-      is1516Available: true,
-      is1617Available: true,
-      is1718Available: true,
-      is1819Available: true,
-      is1920Available: true,
-      is2021Available: true,
-      is2122Available: true,
-      is2223Available: true,
-      is2300Available: true,
-    );
-    this._userDaysAvailable.daysAvailable[1] = UserHoursAvailable(
-      is08Available: true,
-      is810Available: true,
-      is1011Available: true,
-      is1112Available: true,
-      is1213Available: true,
-      is1314Available: true,
-      is1415Available: true,
-      is1516Available: true,
-      is1617Available: true,
-      is1718Available: true,
-      is1819Available: true,
-      is1920Available: true,
-      is2021Available: true,
-      is2122Available: true,
-      is2223Available: true,
-      is2300Available: true,
-    );
-    this._userDaysAvailable.daysAvailable[2] = UserHoursAvailable(
-      is08Available: true,
-      is810Available: true,
-      is1011Available: true,
-      is1112Available: true,
-      is1213Available: true,
-      is1314Available: true,
-      is1415Available: true,
-      is1516Available: true,
-      is1617Available: true,
-      is1718Available: true,
-      is1819Available: true,
-      is1920Available: true,
-      is2021Available: true,
-      is2122Available: true,
-      is2223Available: true,
-      is2300Available: true,
-    );
-    this._userDaysAvailable.daysAvailable[3] = UserHoursAvailable(
-      is08Available: true,
-      is810Available: true,
-      is1011Available: true,
-      is1112Available: true,
-      is1213Available: true,
-      is1314Available: true,
-      is1415Available: true,
-      is1516Available: true,
-      is1617Available: true,
-      is1718Available: true,
-      is1819Available: true,
-      is1920Available: true,
-      is2021Available: true,
-      is2122Available: true,
-      is2223Available: true,
-      is2300Available: true,
-    );
-    this._userDaysAvailable.daysAvailable[4] = UserHoursAvailable(
-      is08Available: true,
-      is810Available: true,
-      is1011Available: true,
-      is1112Available: true,
-      is1213Available: true,
-      is1314Available: true,
-      is1415Available: true,
-      is1516Available: true,
-      is1617Available: true,
-      is1718Available: true,
-      is1819Available: true,
-      is1920Available: true,
-      is2021Available: true,
-      is2122Available: true,
-      is2223Available: true,
-      is2300Available: true,
-    );
-    this._userDaysAvailable.daysAvailable[5] = UserHoursAvailable(
-      is08Available: true,
-      is810Available: true,
-      is1011Available: true,
-      is1112Available: true,
-      is1213Available: true,
-      is1314Available: true,
-      is1415Available: true,
-      is1516Available: true,
-      is1617Available: true,
-      is1718Available: true,
-      is1819Available: true,
-      is1920Available: true,
-      is2021Available: true,
-      is2122Available: true,
-      is2223Available: true,
-      is2300Available: true,
-    );
-    this._userDaysAvailable.daysAvailable[6] = UserHoursAvailable(
-      is08Available: true,
-      is810Available: true,
-      is1011Available: true,
-      is1112Available: true,
-      is1213Available: true,
-      is1314Available: true,
-      is1415Available: true,
-      is1516Available: true,
-      is1617Available: true,
-      is1718Available: true,
-      is1819Available: true,
-      is1920Available: true,
-      is2021Available: true,
-      is2122Available: true,
-      is2223Available: true,
-      is2300Available: true,
-    );
-
-    print('entra');
+    // this._userDaysAvailable = UserDaysAvailable();
+    // this._userDaysAvailable.daysAvailable[0] = widget.searchedDaysAvailable[0];
+    // this._userDaysAvailable.daysAvailable[1] = widget.searchedDaysAvailable[1];
+    // this._userDaysAvailable.daysAvailable[2] = widget.searchedDaysAvailable[2];
+    // this._userDaysAvailable.daysAvailable[3] = widget.searchedDaysAvailable[3];
+    // this._userDaysAvailable.daysAvailable[4] = widget.searchedDaysAvailable[4];
+    // this._userDaysAvailable.daysAvailable[5] = widget.searchedDaysAvailable[5];
+    // this._userDaysAvailable.daysAvailable[6] = widget.searchedDaysAvailable[6];
 
     UserPositions searchedPositions = UserPositions(
       goalKeeper: true,
@@ -246,14 +129,14 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
           isScrollControlled: true,
           builder: (BuildContext context) {
             return FilterUsersAvailability(
-              userDaysAvailable: this._userDaysAvailable,
+              userDaysAvailable: widget.searchedDaysAvailable,
             );
           },
         );
 
         if (filterDays != null) {
-          this._userDaysAvailable = filterDays;
-          print(this._userDaysAvailable.daysAvailable);
+          widget.searchedDaysAvailable = filterDays;
+          print(widget.searchedDaysAvailable.daysAvailable);
         }
       },
     );

@@ -34,13 +34,14 @@ class _FilterUsersAvailabilityState extends State<FilterUsersAvailability> {
 
   @override
   void initState() {
-    if (widget.userDaysAvailable.daysAvailable[0] == null) this._monday = false;
-    if (widget.userDaysAvailable.daysAvailable[1] == null) this._tuesday = false;
-    if (widget.userDaysAvailable.daysAvailable[2] == null) this._wednesday = false;
-    if (widget.userDaysAvailable.daysAvailable[3] == null) this._thursday = false;
-    if (widget.userDaysAvailable.daysAvailable[4] == null) this._friday = false;
-    if (widget.userDaysAvailable.daysAvailable[5] == null) this._saturday = false;
-    if (widget.userDaysAvailable.daysAvailable[6] == null) this._sunday = false;
+    print(widget.userDaysAvailable.daysAvailable[0]);
+    if (widget.userDaysAvailable.daysAvailable[0] == null) this._sunday = false;
+    if (widget.userDaysAvailable.daysAvailable[1] == null) this._monday = false;
+    if (widget.userDaysAvailable.daysAvailable[2] == null) this._tuesday = false;
+    if (widget.userDaysAvailable.daysAvailable[3] == null) this._wednesday = false;
+    if (widget.userDaysAvailable.daysAvailable[4] == null) this._thursday = false;
+    if (widget.userDaysAvailable.daysAvailable[5] == null) this._friday = false;
+    if (widget.userDaysAvailable.daysAvailable[6] == null) this._saturday = false;
 
     super.initState();
   }

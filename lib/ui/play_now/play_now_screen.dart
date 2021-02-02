@@ -1,4 +1,5 @@
 import 'package:app/models/database/user.dart';
+import 'package:app/models/user_days_available.dart';
 import 'package:app/models/user_hours_available.dart';
 import 'package:app/models/user_positions.dart';
 import 'package:app/repositories/play_now_repository.dart';
@@ -22,6 +23,7 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
   dynamic search = '';
   PlayNowRepository _playNowRepository = PlayNowRepository();
   UserPositions positions;
+  UserDaysAvailable _searchedUserDaysAvailable = UserDaysAvailable();
   Map<int, UserHoursAvailable> daysAvailable;
   List<dynamic> playersOffer;
   bool isMale;
@@ -67,6 +69,7 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
       5: emptyUserHoursAvailable,
       6: emptyUserHoursAvailable,
     };
+    _searchedUserDaysAvailable.daysAvailable = this.daysAvailable;
 
     super.initState();
   }
@@ -131,10 +134,11 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
                   enableDrag: true,
                   isScrollControlled: true,
                   builder: (BuildContext context) {
-                    return PlayNowFilter();
+                    return PlayNowFilter(
+                      searchedDaysAvailable: this._searchedUserDaysAvailable
+                    );
                   },
                 );
-                print('Crear un post para jugar');
               },
             ),
           ),
