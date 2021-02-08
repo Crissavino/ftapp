@@ -113,7 +113,7 @@ class _ShowUserHoursAvailableState extends State<ShowUserHoursAvailable> {
     }
 
     return Container(
-      height: _height / 1.3,
+      height: _height / 1.2,
       width: _width,
       decoration: BoxDecoration(
         color: Colors.white,

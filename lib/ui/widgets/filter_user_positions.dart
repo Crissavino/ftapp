@@ -1,51 +1,21 @@
-import 'package:app/bloc/profile/profile_bloc.dart';
-import 'package:app/models/database/position.dart';
 import 'package:app/models/user_positions.dart';
-import 'package:app/repositories/user_repository.dart';
-import 'package:app/utils/constants.dart';
 import 'package:app/utils/show_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/checkbox_list_tile/gf_checkbox_list_tile.dart';
 import 'package:getwidget/types/gf_checkbox_type.dart';
 
-class YourPositions extends StatefulWidget {
+class FilterUserPositions extends StatefulWidget {
 
-  List<Position> userPositions;
-  YourPositions({Key key, this.userPositions}) : super(key: key);
+  UserPositions searchedPositions;
+
+  FilterUserPositions({Key key, this.searchedPositions}) : super(key: key);
 
   @override
-  _YourPositionsState createState() => _YourPositionsState();
+  _FilterUserPositionsState createState() => _FilterUserPositionsState();
 }
 
-class _YourPositionsState extends State<YourPositions> {
-  bool _gkPos = false;
-  bool _defPos = false;
-  bool _mfPos = false;
-  bool _forPos = false;
-
-  @override
-  void initState() {
-    widget.userPositions.forEach((Position element) {
-      if (element.position == 'goalKeeper') {
-        this._gkPos = true;
-      }
-
-      if (element.position == 'defense') {
-        this._defPos = true;
-      }
-
-      if (element.position == 'midfielder') {
-        this._mfPos = true;
-      }
-
-      if (element.position == 'forward') {
-        this._forPos = true;
-      }
-    });
-    super.initState();
-  }
+class _FilterUserPositionsState extends State<FilterUserPositions> {
 
   @override
   Widget build(BuildContext context) {
@@ -67,27 +37,15 @@ class _YourPositionsState extends State<YourPositions> {
           left: 20.0,
           right: 20.0,
         ),
-        child: BlocBuilder<ProfileBloc, ProfileState>(
-          builder: (BuildContext context, state) {
-
-            if (state is ProfileLoadingState) {
-              return Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    circularLoading
-                  ],
-                ),
-              );
-            }
-
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Column(
               children: [
                 ListTile(
                   leading: Text(
-                    'Cual es tu pisicion?',
+                    'Que posiciones buscas?',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -106,7 +64,7 @@ class _YourPositionsState extends State<YourPositions> {
                       showAlert(
                         context,
                         'Informacion',
-                        'Selecciona la/las posiciones en la que sueles jugar',
+                        'Selecciona la/las posiciones que estas buscando',
                       );
                     },
                   ),
@@ -115,13 +73,12 @@ class _YourPositionsState extends State<YourPositions> {
                   title: Center(
                     child: Text(
                       'Arquero',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
                   ),
                   avatar: GFAvatar(
-                    backgroundImage: AssetImage(
-                        'assets/icons/primary/007-goalkeeper.png'),
+                    backgroundImage:
+                    AssetImage('assets/icons/primary/007-goalkeeper.png'),
                     size: 45.0,
                   ),
                   size: 35,
@@ -137,23 +94,21 @@ class _YourPositionsState extends State<YourPositions> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      _gkPos = !_gkPos;
+                      widget.searchedPositions.goalKeeper = !widget.searchedPositions.goalKeeper;
                     });
                   },
-                  value: _gkPos,
+                  value: widget.searchedPositions.goalKeeper,
                   inactiveIcon: null,
                 ),
                 GFCheckboxListTile(
                   title: Center(
                     child: Text(
                       'Defensor',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
                   ),
                   avatar: GFAvatar(
-                    backgroundImage:
-                    AssetImage('assets/icons/primary/005-pads.png'),
+                    backgroundImage: AssetImage('assets/icons/primary/005-pads.png'),
                     size: 45.0,
                   ),
                   size: 35,
@@ -169,23 +124,22 @@ class _YourPositionsState extends State<YourPositions> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      _defPos = !_defPos;
+                      widget.searchedPositions.defense = !widget.searchedPositions.defense;
                     });
                   },
-                  value: _defPos,
+                  value: widget.searchedPositions.defense,
                   inactiveIcon: null,
                 ),
                 GFCheckboxListTile(
                   title: Center(
                     child: Text(
                       'Mediocampista',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
                   ),
                   avatar: GFAvatar(
-                    backgroundImage: AssetImage(
-                        'assets/icons/primary/006-footwear.png'),
+                    backgroundImage:
+                    AssetImage('assets/icons/primary/006-footwear.png'),
                     size: 45.0,
                   ),
                   size: 35,
@@ -201,23 +155,22 @@ class _YourPositionsState extends State<YourPositions> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      _mfPos = !_mfPos;
+                      widget.searchedPositions.midfielder = !widget.searchedPositions.midfielder;
                     });
                   },
-                  value: _mfPos,
+                  value: widget.searchedPositions.midfielder,
                   inactiveIcon: null,
                 ),
                 GFCheckboxListTile(
                   title: Center(
                     child: Text(
                       'Delantero',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
                   ),
                   avatar: GFAvatar(
-                    backgroundImage: AssetImage(
-                        'assets/icons/primary/013-football-1.png'),
+                    backgroundImage:
+                    AssetImage('assets/icons/primary/013-football-1.png'),
                     size: 45.0,
                   ),
                   size: 35,
@@ -233,10 +186,10 @@ class _YourPositionsState extends State<YourPositions> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      _forPos = !_forPos;
+                      widget.searchedPositions.forward = !widget.searchedPositions.forward;
                     });
                   },
-                  value: _forPos,
+                  value: widget.searchedPositions.forward,
                   inactiveIcon: null,
                 ),
                 Container(
@@ -269,48 +222,21 @@ class _YourPositionsState extends State<YourPositions> {
                     child: FlatButton(
                       splashColor: Colors.transparent,
                       onPressed: () async {
-                        bool noPositionSelected = (!_gkPos && !_defPos && !_mfPos && !_forPos);
+                        bool noPositionSelected = (
+                            !widget.searchedPositions.goalKeeper &&
+                            !widget.searchedPositions.defense &&
+                            !widget.searchedPositions.midfielder &&
+                            !widget.searchedPositions.forward
+                        );
 
-                        if(noPositionSelected) {
-                          BlocProvider.of<ProfileBloc>(context).add(
-                              ProfileErrorEvent()
-                          );
+                        if (noPositionSelected) {
                           return showAlert(
                             context,
                             'Atencion!',
-                            'Debes seleccionar alguna posicion en la que usualmente juegas',
+                            'Debes seleccionar alguna posicion para poder filtrar',
                           );
                         } else {
-                          BlocProvider.of<ProfileBloc>(context).add(
-                              ProfileLoadingEvent()
-                          );
-
-                          UserPositions userPositions = UserPositions(
-                            goalKeeper: _gkPos,
-                            defense: _defPos,
-                            midfielder: _mfPos,
-                            forward: _forPos,
-                          );
-
-                          final editUserPositionsResponse = await UserRepository().editUserPositions(
-                            userPositions,
-                          );
-
-                          if (editUserPositionsResponse['success'] == true) {
-                            Navigator.pop(context, true);
-                            BlocProvider.of<ProfileBloc>(context).add(
-                                ProfileCompleteEvent()
-                            );
-                          } else {
-                            BlocProvider.of<ProfileBloc>(context).add(
-                                ProfileErrorEvent()
-                            );
-                            return showAlert(
-                              context,
-                              'Error!',
-                              'Ocurrió un error al guardar las posiciones!',
-                            );
-                          }
+                          Navigator.pop(context, widget.searchedPositions);
                         }
                       },
                       child: Text(
@@ -326,8 +252,8 @@ class _YourPositionsState extends State<YourPositions> {
                   ),
                 ),
               ],
-            );
-          },
+            ),
+          ],
         ),
       ),
     );

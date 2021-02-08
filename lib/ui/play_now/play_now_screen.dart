@@ -22,26 +22,32 @@ class PlayNowScreen extends StatefulWidget {
 class _PlayNowScreenState extends State<PlayNowScreen> {
   dynamic search = '';
   PlayNowRepository _playNowRepository = PlayNowRepository();
-  UserPositions positions;
+  UserPositions _searchedPositions;
   UserDaysAvailable _searchedUserDaysAvailable = UserDaysAvailable();
   Map<int, UserHoursAvailable> daysAvailable;
   List<dynamic> playersOffer;
   bool isMale;
-  bool isMix;
-  int range;
+  Map<String, bool> _searchedGender = {
+    'men': true,
+    'women': false,
+    'mix': false,
+  };
+  Map<String, double> _searchedRange = {
+    'distance': 20.0
+  };
+  // double _searchedRange = 20.0;
 
   @override
   void initState() {
     // TODO: implement initState
-    this.isMale = true;
-    this.isMix = false;
-    this.range = 20;
-    this.positions = UserPositions(
+
+    this._searchedPositions = UserPositions(
       goalKeeper: true,
       defense: true,
       midfielder: true,
       forward: true,
     );
+
     UserHoursAvailable emptyUserHoursAvailable = UserHoursAvailable(
       is08Available: true,
       is810Available: true,
@@ -69,13 +75,35 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
       5: emptyUserHoursAvailable,
       6: emptyUserHoursAvailable,
     };
-    _searchedUserDaysAvailable.daysAvailable = this.daysAvailable;
+
+    _searchedUserDaysAvailable.setAllDays = this.daysAvailable;
 
     super.initState();
   }
 
+  loadUsers() async {
+    dynamic usersOffersResponse = await _playNowRepository.getUserOffers(
+      this._searchedRange['distance'].toInt(),
+      this._searchedGender,
+      this._searchedPositions,
+      daysAvailable,
+    );
+
+    if (usersOffersResponse['success']) {
+      return usersOffersResponse['users'];
+    } else {
+      return showAlert(
+        context,
+        'Error!',
+        'Ocurrió un error cargar los jugadores!',
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(this._searchedGender);
+
     final _width = MediaQuery.of(context).size.width;
     final _height = MediaQuery.of(context).size.height;
 
@@ -127,18 +155,23 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
               icon: Icon(Icons.filter_list),
               iconSize: 30.0,
               color: Colors.white,
-              onPressed: () {
-                showModalBottomSheet(
+              onPressed: () async {
+                this.playersOffer = await showModalBottomSheet(
                   backgroundColor: Colors.transparent,
                   context: context,
                   enableDrag: true,
                   isScrollControlled: true,
                   builder: (BuildContext context) {
                     return PlayNowFilter(
-                      searchedDaysAvailable: this._searchedUserDaysAvailable
+                      searchedDaysAvailable: this._searchedUserDaysAvailable,
+                      searchedPositions: this._searchedPositions,
+                      searchedGender: this._searchedGender,
+                      searchedRange: this._searchedRange
                     );
                   },
                 );
+
+                setState(() {});
               },
             ),
           ),
@@ -200,18 +233,17 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
                               height: _height,
                               child: FutureBuilder(
                                 future: _playNowRepository.getUserOffers(
-                                  this.range,
-                                  this.isMale,
-                                  this.isMix,
-                                  this.positions,
+                                  this._searchedRange['distance'].toInt(),
+                                  this._searchedGender,
+                                  this._searchedPositions,
                                   daysAvailable,
                                 ),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<dynamic> snapshot) {
-                                  return Container(
-                                    width: _width,
-                                    height: _height,
-                                  );
+                                  // return Container(
+                                  //   width: _width,
+                                  //   height: _height,
+                                  // );
 
                                   if (!snapshot.hasData) {
                                     return Container(

@@ -1,8 +1,8 @@
 class UserPositions {
-  final bool goalKeeper;
-  final bool defense;
-  final bool midfielder;
-  final bool forward;
+  bool goalKeeper;
+  bool defense;
+  bool midfielder;
+  bool forward;
 
   UserPositions({this.goalKeeper, this.defense, this.midfielder, this.forward});
 

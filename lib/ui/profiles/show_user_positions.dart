@@ -62,25 +62,25 @@ class _ShowUserPositionsState extends State<ShowUserPositions> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GFAvatar(
-                  backgroundImage: AssetImage(
-                      'assets/icons/primary/007-goalkeeper.png'),
-                  size: 45.0,
-                ),
-                SizedBox(width: 20.0,),
-                Center(
-                  child: Text(
-                    'Arquero',
-                    style: TextStyle(
-                        fontSize: 18.0, fontWeight: FontWeight.bold),
+            if (this._gkPos) Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GFAvatar(
+                        backgroundImage: AssetImage(
+                            'assets/icons/primary/007-goalkeeper.png'),
+                        size: 45.0,
+                      ),
+                      SizedBox(width: 20.0,),
+                      Center(
+                        child: Text(
+                          'Arquero',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
-            Row(
+            if (this._defPos) Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GFAvatar(
@@ -98,7 +98,7 @@ class _ShowUserPositionsState extends State<ShowUserPositions> {
                 )
               ],
             ),
-            Row(
+            if (this._mfPos) Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GFAvatar(
@@ -116,7 +116,7 @@ class _ShowUserPositionsState extends State<ShowUserPositions> {
                 )
               ],
             ),
-            Row(
+            if (this._forPos) Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GFAvatar(
@@ -133,7 +133,7 @@ class _ShowUserPositionsState extends State<ShowUserPositions> {
                   ),
                 )
               ],
-            ),
+            )
           ],
         ),
       ),

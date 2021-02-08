@@ -45,8 +45,8 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         routes: routes,
-        // home: CheckAuth(),
-        home: PlayNowScreen(),
+        home: CheckAuth(),
+        // home: PlayNowScreen(),
       ),
     );
   }

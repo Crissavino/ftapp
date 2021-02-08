@@ -12,8 +12,7 @@ class PlayNowRepository {
 
   Future<dynamic> getUserOffers(
     int range,
-      bool isMale,
-      bool isMix,
+      Map<String, bool> gender,
     UserPositions positions,
     Map<int, UserHoursAvailable> daysAvailable,
   ) async {
@@ -23,8 +22,8 @@ class PlayNowRepository {
     final data = {
       "user_id": user.id,
       "range": range,
-      "isMale": isMale,
-      "isMix": isMix,
+      "isMale": gender['men'] ? true : false,
+      "isMix": gender['mix'],
       "positions": positions.toJson(),
       "daysAvailable": UserDaysAvailable().getDataDayAvailable(daysAvailable),
     };

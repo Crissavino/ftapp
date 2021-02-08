@@ -30,11 +30,9 @@ class _FilterUsersAvailabilityState extends State<FilterUsersAvailability> {
   bool _friday = true;
   bool _saturday = true;
   bool _sunday = true;
-  UserDaysAvailable _userDaysAvailable;
 
   @override
   void initState() {
-    print(widget.userDaysAvailable.daysAvailable[0]);
     if (widget.userDaysAvailable.daysAvailable[0] == null) this._sunday = false;
     if (widget.userDaysAvailable.daysAvailable[1] == null) this._monday = false;
     if (widget.userDaysAvailable.daysAvailable[2] == null) this._tuesday = false;

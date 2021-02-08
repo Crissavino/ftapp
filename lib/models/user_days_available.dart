@@ -12,7 +12,10 @@ class UserDaysAvailable {
   };
 
   Map<int, UserHoursAvailable> get daysAvailable => _daysAvailable;
-  set daysAvailable(Map<int, UserHoursAvailable> days) => daysAvailable;
+  // set daysAvailable(Map<int, UserHoursAvailable> days) => _daysAvailable;
+  set setAllDays(Map<int, UserHoursAvailable> days) {
+    this._daysAvailable = days;
+  }
 
   setDaysAvailable(int dayOfTheWeek, UserHoursAvailable hoursAvailable) {
     _daysAvailable.update(dayOfTheWeek, (value) => hoursAvailable);

@@ -6,18 +6,31 @@ import 'package:app/models/database/position.dart';
 import 'package:app/models/user_days_available.dart';
 import 'package:app/models/user_hours_available.dart';
 import 'package:app/models/user_positions.dart';
+import 'package:app/repositories/play_now_repository.dart';
 import 'package:app/repositories/user_repository.dart';
+import 'package:app/ui/widgets/custom_slider.dart';
+import 'package:app/ui/widgets/filter_user_positions.dart';
 import 'package:app/ui/widgets/filter_users_availability.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/show_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:getwidget/components/checkbox/gf_checkbox.dart';
+import 'package:getwidget/types/gf_checkbox_type.dart';
 
 class PlayNowFilter extends StatefulWidget {
-
   UserDaysAvailable searchedDaysAvailable;
+  UserPositions searchedPositions;
+  Map<String, bool> searchedGender;
+  Map<String, double> searchedRange;
 
-  PlayNowFilter({Key key, this.searchedDaysAvailable}) : super(key: key);
+  PlayNowFilter({
+    Key key,
+    this.searchedDaysAvailable,
+    this.searchedPositions,
+    this.searchedGender,
+    this.searchedRange,
+  }) : super(key: key);
 
   @override
   _PlayNowFilterState createState() => _PlayNowFilterState();
@@ -25,34 +38,13 @@ class PlayNowFilter extends StatefulWidget {
 
 class _PlayNowFilterState extends State<PlayNowFilter> {
   UserRepository _userRepository = UserRepository();
-  UserPositions searchedPositions;
   UserDaysAvailable _userDaysAvailable;
-  bool isMale;
-  bool isMix;
-  int range;
-  Location _userLocation;
 
   // text field state
   String localeName = Platform.localeName.split('_')[0];
 
   @override
   void initState() {
-    // this._userDaysAvailable = UserDaysAvailable();
-    // this._userDaysAvailable.daysAvailable[0] = widget.searchedDaysAvailable[0];
-    // this._userDaysAvailable.daysAvailable[1] = widget.searchedDaysAvailable[1];
-    // this._userDaysAvailable.daysAvailable[2] = widget.searchedDaysAvailable[2];
-    // this._userDaysAvailable.daysAvailable[3] = widget.searchedDaysAvailable[3];
-    // this._userDaysAvailable.daysAvailable[4] = widget.searchedDaysAvailable[4];
-    // this._userDaysAvailable.daysAvailable[5] = widget.searchedDaysAvailable[5];
-    // this._userDaysAvailable.daysAvailable[6] = widget.searchedDaysAvailable[6];
-
-    UserPositions searchedPositions = UserPositions(
-      goalKeeper: true,
-      defense: true,
-      midfielder: true,
-      forward: true,
-    );
-
     super.initState();
   }
 
@@ -60,10 +52,6 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height;
 
-    // filtrar por sexo o mixto
-    // filtrar por posiciones
-    // filtrar por distancia maxima
-    // filtrar por disponibilidad
     return Container(
         height: _height / 1.3,
         decoration: BoxDecoration(
@@ -76,15 +64,21 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0),
             _buildName(),
+            // SizedBox(height: 5.0),
+            _buildFilterDistance(),
+            // SizedBox(height: 5.0),
+            _buildFilterBySex(),
             SizedBox(height: 5.0),
             _buildFilterDaysAvailable(),
-            SizedBox(height: 10.0),
+            // SizedBox(height: 5.0),
+            _buildFilterPositions(),
+            // SizedBox(height: 5.0),
             _buildFilterButton(),
+            SizedBox(height: 10.0),
           ],
-        )
-        );
+        ));
   }
 
   _buildName() {
@@ -95,6 +89,255 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
         fontFamily: 'Nunito',
         fontSize: 30.0,
       ),
+    );
+  }
+
+  _buildFilterDistance() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 10.0,
+        ),
+        Text(
+          'Distancia',
+          style: TextStyle(fontSize: 16.0),
+        ),
+        SizedBox(
+          height: 5.0,
+        ),
+        Center(
+          child: Text('${widget.searchedRange['distance']} km'),
+        ),
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: Colors.green[700],
+            inactiveTrackColor: Colors.green[100],
+            trackShape: RoundedRectSliderTrackShape(),
+            trackHeight: 4.0,
+            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+            thumbColor: Colors.green,
+            overlayColor: Colors.green.withAlpha(32),
+            overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+            tickMarkShape: RoundSliderTickMarkShape(),
+            activeTickMarkColor: Colors.green[700],
+            inactiveTickMarkColor: Colors.green[100],
+            valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+            valueIndicatorColor: Colors.green,
+            valueIndicatorTextStyle: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          child: Slider(
+            value: widget.searchedRange['distance'],
+            min: 0,
+            max: 100,
+            divisions: 10,
+            label: widget.searchedRange['distance'].toString(),
+            onChanged: (value) {
+              setState(
+                    () {
+                  widget.searchedRange['distance'] = value;
+                },
+              );
+              print(widget.searchedRange['distance']);
+            },
+          ),
+        ),
+        // CustomSlider(
+        //   sliderValue: widget.searchedRange,
+        // ),
+      ],
+    );
+  }
+
+  _buildFilterBySex() {
+    return Column(
+      children: [
+        Text(
+          'Género',
+          style: TextStyle(fontSize: 16.0),
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    'Hombre',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                GFCheckbox(
+                  size: 35,
+                  activeBgColor: Colors.green[400],
+                  inactiveBorderColor: Colors.green[700],
+                  activeBorderColor: Colors.green[700],
+                  type: GFCheckboxType.circle,
+                  value: widget.searchedGender['men'],
+                  inactiveIcon: null,
+                  activeIcon: Icon(
+                    Icons.sports_soccer,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                  onChanged: (value) {
+                    widget.searchedGender['men'] =
+                    !widget.searchedGender['men'];
+                    if (!widget.searchedGender['men'] && !value) {
+                      widget.searchedGender['women'] = true;
+                    } else {
+                      widget.searchedGender['women'] = false;
+                      widget.searchedGender['mix'] = false;
+                    }
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(
+                    'Mujer',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                GFCheckbox(
+                  size: 35,
+                  activeBgColor: Colors.green[400],
+                  inactiveBorderColor: Colors.green[700],
+                  activeBorderColor: Colors.green[700],
+                  type: GFCheckboxType.circle,
+                  value: widget.searchedGender['women'],
+                  inactiveIcon: null,
+                  activeIcon: Icon(
+                    Icons.sports_soccer,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                  onChanged: (value) {
+                    widget.searchedGender['women'] =
+                    !widget.searchedGender['women'];
+                    if (!widget.searchedGender['women'] && !value) {
+                      widget.searchedGender['men'] = true;
+                    } else {
+                      widget.searchedGender['men'] = false;
+                      widget.searchedGender['mix'] = false;
+                    }
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(
+                    'Mixto',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                GFCheckbox(
+                  size: 35,
+                  activeBgColor: Colors.green[400],
+                  inactiveBorderColor: Colors.green[700],
+                  activeBorderColor: Colors.green[700],
+                  type: GFCheckboxType.circle,
+                  value: widget.searchedGender['mix'],
+                  inactiveIcon: null,
+                  activeIcon: Icon(
+                    Icons.sports_soccer,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      widget.searchedGender['mix'] =
+                      !widget.searchedGender['mix'];
+                      if (!widget.searchedGender['mix'] && !value) {
+                        widget.searchedGender['men'] = true;
+                      } else {
+                        widget.searchedGender['men'] = false;
+                        widget.searchedGender['women'] = false;
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(width: 5.0,)
+          ],
+        ),
+      ],
+    );
+  }
+
+  _buildFilterPositions() {
+    return GestureDetector(
+      child: Container(
+        width: MediaQuery.of(context).size.width * .95,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6.0,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: ListTile(
+          title: Text('Posiciones'),
+          trailing: Icon(
+            Icons.keyboard_arrow_up_outlined,
+            size: 40.0,
+          ),
+        ),
+      ),
+      onTap: () async {
+        final filterPositions = await showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          enableDrag: true,
+          isScrollControlled: true,
+          builder: (BuildContext context) {
+            return FilterUserPositions(
+              searchedPositions: widget.searchedPositions,
+            );
+          },
+        );
+
+        if (filterPositions != null) {
+          widget.searchedPositions = filterPositions;
+        }
+      },
     );
   }
 
@@ -136,7 +379,6 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
 
         if (filterDays != null) {
           widget.searchedDaysAvailable = filterDays;
-          print(widget.searchedDaysAvailable.daysAvailable);
         }
       },
     );
@@ -173,22 +415,24 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
         child: FlatButton(
           splashColor: Colors.transparent,
           onPressed: () async {
-            bool noPositionSelected = (!searchedPositions.goalKeeper && !searchedPositions.defense && !searchedPositions.midfielder && !searchedPositions.forward);
-            bool noDaysSelected = (
-                this._userDaysAvailable.daysAvailable[0] == null &&
-                    this._userDaysAvailable.daysAvailable[1] == null &&
-                    this._userDaysAvailable.daysAvailable[2] == null &&
-                    this._userDaysAvailable.daysAvailable[3] == null &&
-                    this._userDaysAvailable.daysAvailable[4] == null &&
-                    this._userDaysAvailable.daysAvailable[5] == null &&
-                    this._userDaysAvailable.daysAvailable[6] == null
-            );
+            bool noPositionSelected = (!widget.searchedPositions.goalKeeper &&
+                !widget.searchedPositions.defense &&
+                !widget.searchedPositions.midfielder &&
+                !widget.searchedPositions.forward);
+            bool noDaysSelected =
+                (widget.searchedDaysAvailable.daysAvailable[0] == null &&
+                    widget.searchedDaysAvailable.daysAvailable[1] == null &&
+                    widget.searchedDaysAvailable.daysAvailable[2] == null &&
+                    widget.searchedDaysAvailable.daysAvailable[3] == null &&
+                    widget.searchedDaysAvailable.daysAvailable[4] == null &&
+                    widget.searchedDaysAvailable.daysAvailable[5] == null &&
+                    widget.searchedDaysAvailable.daysAvailable[6] == null);
 
             // BlocProvider.of<CompleteProfileBloc>(context).add(
             //     ProfileCompleteLoadingEvent()
             // );
 
-            if(noPositionSelected) {
+            if (noPositionSelected) {
               // BlocProvider.of<CompleteProfileBloc>(context).add(
               //     ProfileCompleteErrorEvent()
               // );
@@ -205,6 +449,24 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
                 context,
                 'Atencion!',
                 'Debes seleccionar alguna disponibilidad de dia y horario para poder jugar',
+              );
+            }
+
+            dynamic filterResponse = PlayNowRepository().getUserOffers(
+              widget.searchedRange['distance'].toInt(),
+              widget.searchedGender,
+              widget.searchedPositions,
+              widget.searchedDaysAvailable.daysAvailable,
+            );
+
+            if (filterResponse['success']) {
+              List<dynamic> users = filterResponse['users'];
+              Navigator.pop(context, users);
+            } else {
+              return showAlert(
+                context,
+                'Error!',
+                'Ocurrió un error cargar los jugadores!',
               );
             }
 
