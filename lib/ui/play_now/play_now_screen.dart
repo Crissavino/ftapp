@@ -25,7 +25,6 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
   UserPositions _searchedPositions;
   UserDaysAvailable _searchedUserDaysAvailable = UserDaysAvailable();
   Map<int, UserHoursAvailable> daysAvailable;
-  List<dynamic> playersOffer;
   bool isMale;
   Map<String, bool> _searchedGender = {
     'men': true,
@@ -79,25 +78,6 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
     _searchedUserDaysAvailable.setAllDays = this.daysAvailable;
 
     super.initState();
-  }
-
-  loadUsers() async {
-    dynamic usersOffersResponse = await _playNowRepository.getUserOffers(
-      this._searchedRange['distance'].toInt(),
-      this._searchedGender,
-      this._searchedPositions,
-      daysAvailable,
-    );
-
-    if (usersOffersResponse['success']) {
-      return usersOffersResponse['users'];
-    } else {
-      return showAlert(
-        context,
-        'Error!',
-        'Ocurrió un error cargar los jugadores!',
-      );
-    }
   }
 
   @override
@@ -156,7 +136,7 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
               iconSize: 30.0,
               color: Colors.white,
               onPressed: () async {
-                this.playersOffer = await showModalBottomSheet(
+                await showModalBottomSheet(
                   backgroundColor: Colors.transparent,
                   context: context,
                   enableDrag: true,
@@ -179,116 +159,120 @@ class _PlayNowScreenState extends State<PlayNowScreen> {
       );
     }
 
-    return Stack(
-      children: [
-        SafeArea(
-          top: false,
-          bottom: false,
-          child: Scaffold(
-            body: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light,
-              child: Center(
-                child: Container(
-                  decoration: horizontalGradient,
-                  child: LayoutBuilder(
-                    builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                          double innerHeight = constraints.maxHeight;
-                          double innerWidth = constraints.maxWidth;
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Stack(
+        children: [
+          SafeArea(
+            top: false,
+            bottom: false,
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle.light,
+                child: Center(
+                  child: Container(
+                    decoration: horizontalGradient,
+                    child: LayoutBuilder(
+                      builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                            double innerHeight = constraints.maxHeight;
+                            double innerWidth = constraints.maxWidth;
 
-                      return Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                              decoration: horizontalGradient,
-                              padding: EdgeInsets.only(left: 10.0, top: 33.0),
-                              alignment: Alignment.center,
-                              child: _buildSearchTF(),
-                            ),
-                          ),
-                          Positioned(
-                            top: 80.0,
-                            left: 0.0,
-                            right: 0.0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 6.0,
-                                    offset: Offset(0, -2),
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius: screenBorders,
+                        return Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                decoration: horizontalGradient,
+                                padding: EdgeInsets.only(left: 10.0, top: 33.0),
+                                alignment: Alignment.center,
+                                child: _buildSearchTF(),
                               ),
-                              padding: EdgeInsets.only(
-                                  bottom: 20.0, left: 20.0, right: 20.0),
-                              margin: EdgeInsets.only(top: 20.0),
-                              width: _width,
-                              height: _height,
-                              child: FutureBuilder(
-                                future: _playNowRepository.getUserOffers(
-                                  this._searchedRange['distance'].toInt(),
-                                  this._searchedGender,
-                                  this._searchedPositions,
-                                  daysAvailable,
+                            ),
+                            Positioned(
+                              top: 80.0,
+                              left: 0.0,
+                              right: 0.0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 6.0,
+                                      offset: Offset(0, -2),
+                                    ),
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: screenBorders,
                                 ),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<dynamic> snapshot) {
-                                  // return Container(
-                                  //   width: _width,
-                                  //   height: _height,
-                                  // );
+                                padding: EdgeInsets.only(
+                                    bottom: 20.0, left: 20.0, right: 20.0),
+                                margin: EdgeInsets.only(top: 20.0),
+                                width: _width,
+                                height: _height,
+                                child: FutureBuilder(
+                                  future: _playNowRepository.getUserOffers(
+                                    this._searchedRange['distance'].toInt(),
+                                    this._searchedGender,
+                                    this._searchedPositions,
+                                    daysAvailable,
+                                  ),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<dynamic> snapshot) {
+                                    // return Container(
+                                    //   width: _width,
+                                    //   height: _height,
+                                    // );
 
-                                  if (!snapshot.hasData) {
-                                    return Container(
-                                      width: _width,
-                                      height: _height,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [circularLoading],
-                                      ),
-                                    );
-                                  }
+                                    if (!snapshot.hasData) {
+                                      return Container(
+                                        width: _width,
+                                        height: _height,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [circularLoading],
+                                        ),
+                                      );
+                                    }
 
-                                  dynamic response = snapshot.data;
-                                  if (response['success']) {
-                                    List<dynamic> users = response['users'];
-                                    return ListView.builder(
-                                      itemCount: users.length,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        return _buildPlayNowRow(users[index]);
-                                      },
-                                    );
-                                  } else {
-                                    return showAlert(
-                                      context,
-                                      'Error!',
-                                      'Ocurrió un error cargar los jugadores!',
-                                    );
-                                  }
+                                    dynamic response = snapshot.data;
+                                    if (response['success']) {
+                                      List<dynamic> users = response['users'];
+                                      return ListView.builder(
+                                        itemCount: users.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return _buildPlayNowRow(users[index]);
+                                        },
+                                      );
+                                    } else {
+                                      return showAlert(
+                                        context,
+                                        'Error!',
+                                        'Ocurrió un error cargar los jugadores!',
+                                      );
+                                    }
 
-                                },
+                                  },
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
+              bottomNavigationBar: _buildBottomNavigationBarRounded(),
             ),
-            bottomNavigationBar: _buildBottomNavigationBarRounded(),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 

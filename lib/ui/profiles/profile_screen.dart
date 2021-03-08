@@ -62,6 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   top: false,
                   bottom: false,
                   child: Scaffold(
+                    resizeToAvoidBottomInset: false,
                     body: AnnotatedRegion<SystemUiOverlayStyle>(
                       value: SystemUiOverlayStyle.light,
                       child: Center(
@@ -146,6 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   top: false,
                   bottom: false,
                   child: Scaffold(
+                    resizeToAvoidBottomInset: false,
                     body: AnnotatedRegion<SystemUiOverlayStyle>(
                       value: SystemUiOverlayStyle.light,
                       child: Center(

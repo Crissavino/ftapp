@@ -247,6 +247,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
           top: false,
           bottom: false,
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             body: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle.light,
               child: Center(

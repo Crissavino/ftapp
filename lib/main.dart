@@ -45,8 +45,8 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         routes: routes,
-        home: CheckAuth(),
-        // home: PlayNowScreen(),
+        // home: CheckAuth(),
+        home: MatchesScreen(),
       ),
     );
   }
@@ -109,6 +109,7 @@ class _CheckAuthState extends State<CheckAuth> {
       child = LoginScreen();
     }
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: child,
     );
   }

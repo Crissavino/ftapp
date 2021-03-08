@@ -54,6 +54,7 @@ class _PublicProfileState extends State<PublicProfile> {
           top: false,
           bottom: false,
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             body: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle.light,
               child: Center(

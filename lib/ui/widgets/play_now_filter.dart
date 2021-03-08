@@ -412,8 +412,7 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
       width: MediaQuery.of(context).size.width * .40,
       height: 50.0,
       child: Center(
-        child: FlatButton(
-          splashColor: Colors.transparent,
+        child: TextButton(
           onPressed: () async {
             bool noPositionSelected = (!widget.searchedPositions.goalKeeper &&
                 !widget.searchedPositions.defense &&
@@ -452,7 +451,7 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
               );
             }
 
-            dynamic filterResponse = PlayNowRepository().getUserOffers(
+            dynamic filterResponse = await PlayNowRepository().getUserOffers(
               widget.searchedRange['distance'].toInt(),
               widget.searchedGender,
               widget.searchedPositions,

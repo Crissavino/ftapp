@@ -171,8 +171,7 @@ class _YourLocationState extends State<YourLocation> {
                         width: _width * .40,
                         height: 50.0,
                         child: Center(
-                          child: FlatButton(
-                            splashColor: Colors.transparent,
+                          child: TextButton(
                             onPressed: () async {
 
                               if (userLocationDetails == null) {

@@ -27,6 +27,7 @@ class _MatchesState extends State<MatchesScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
+            margin: EdgeInsets.only(top: 10.0),
             height: 30.0,
             width: width * 0.82,
             decoration: BoxDecoration(
@@ -62,6 +63,7 @@ class _MatchesState extends State<MatchesScreen> {
             ),
           ),
           Container(
+            margin: EdgeInsets.only(top: 10.0),
             child: IconButton(
               icon: Icon(Icons.add_circle_outline),
               iconSize: 30.0,
@@ -75,7 +77,6 @@ class _MatchesState extends State<MatchesScreen> {
                   builder: (BuildContext context) {
                     return CreateMatchPost();
                   },);
-                print('Crear un post para jugar ahora');
               },
             ),
           ),
@@ -83,133 +84,137 @@ class _MatchesState extends State<MatchesScreen> {
       );
     }
 
-    return Stack(
-      children: [
-        SafeArea(
-          top: false,
-          bottom: false,
-          child: Scaffold(
-            body: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light,
-              child: Center(
-                child: Container(
-                  decoration: horizontalGradient,
-                  child: LayoutBuilder(
-                    builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      return Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                              decoration: horizontalGradient,
-                              padding: EdgeInsets.only(left: 10.0, top: 33.0),
-                              alignment: Alignment.center,
-                              child: _buildSearchTF(),
-                            ),
-                          ),
-                          Positioned(
-                            top: 80.0,
-                            left: 0.0,
-                            right: 0.0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 6.0,
-                                    offset: Offset(0, -2),
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius: screenBorders,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Stack(
+        children: [
+          SafeArea(
+            top: false,
+            bottom: false,
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle.light,
+                child: Center(
+                  child: Container(
+                    decoration: horizontalGradient,
+                    child: LayoutBuilder(
+                      builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                decoration: horizontalGradient,
+                                padding: EdgeInsets.only(left: 10.0, top: 33.0),
+                                alignment: Alignment.center,
+                                child: _buildSearchTF(),
                               ),
-                              padding: EdgeInsets.only(
-                                  bottom: 20.0, left: 20.0, right: 20.0),
-                              margin: EdgeInsets.only(top: 20.0),
-                              width: _width,
-                              height: _height,
-                              child: ListView(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      print('Ir al partido');
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            Colors.green[600],
-                                            Colors.green[500],
-                                            Colors.green[500],
-                                            Colors.green[600],
-                                          ],
-                                          stops: [0.1, 0.4, 0.7, 0.9],
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.green[100],
-                                            blurRadius: 10.0,
-                                            offset: Offset(0, 8),
+                            ),
+                            Positioned(
+                              top: 80.0,
+                              left: 0.0,
+                              right: 0.0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 6.0,
+                                      offset: Offset(0, -2),
+                                    ),
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: screenBorders,
+                                ),
+                                padding: EdgeInsets.only(
+                                    bottom: 20.0, left: 20.0, right: 20.0),
+                                margin: EdgeInsets.only(top: 20.0),
+                                width: _width,
+                                height: _height,
+                                child: ListView(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        print('Ir al partido');
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              Colors.green[600],
+                                              Colors.green[500],
+                                              Colors.green[500],
+                                              Colors.green[600],
+                                            ],
+                                            stops: [0.1, 0.4, 0.7, 0.9],
                                           ),
-                                        ],
-                                        color: Colors.green[400],
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(30.0)),
-                                      ),
-                                      width: _width,
-                                      height: 80.0,
-                                      child: Center(
-                                        child: ListTile(
-                                          leading: CircleAvatar(
-                                            radius: 30.0,
-                                            backgroundColor: Colors.white,
-                                            child: Icon(
-                                              Icons.sports_soccer,
-                                              color: Colors.green[700],
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.green[100],
+                                              blurRadius: 10.0,
+                                              offset: Offset(0, 8),
+                                            ),
+                                          ],
+                                          color: Colors.green[400],
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(30.0)),
+                                        ),
+                                        width: _width,
+                                        height: 80.0,
+                                        child: Center(
+                                          child: ListTile(
+                                            leading: CircleAvatar(
+                                              radius: 30.0,
+                                              backgroundColor: Colors.white,
+                                              child: Icon(
+                                                Icons.sports_soccer,
+                                                color: Colors.green[700],
+                                                size: 40.0,
+                                              ),
+                                            ),
+                                            title: Text(
+                                              'Partido 1',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            trailing: Icon(
+                                              Icons.keyboard_arrow_right,
+                                              color: Colors.white,
                                               size: 40.0,
                                             ),
-                                          ),
-                                          title: Text(
-                                            'Partido 1',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          trailing: Icon(
-                                            Icons.keyboard_arrow_right,
-                                            color: Colors.white,
-                                            size: 40.0,
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
+              bottomNavigationBar: _buildBottomNavigationBarRounded(),
             ),
-            bottomNavigationBar: _buildBottomNavigationBarRounded(),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 

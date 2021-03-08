@@ -346,6 +346,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final availableHeight = mediaQuery.size.height;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(

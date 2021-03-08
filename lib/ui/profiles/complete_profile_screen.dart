@@ -1135,6 +1135,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     List<Widget> slides() {
       slideList = [
         Scaffold(
+          resizeToAvoidBottomInset: false,
           body: AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle.light,
             child: GestureDetector(
@@ -1176,6 +1177,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
           ),
         ),
         Scaffold(
+          resizeToAvoidBottomInset: false,
           body: AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle.light,
             child: GestureDetector(
