@@ -12,6 +12,7 @@ import 'package:app/ui/play_now/play_now_screen.dart';
 import 'package:app/ui/profiles/complete_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -47,6 +48,13 @@ class MyApp extends StatelessWidget {
         routes: routes,
         // home: CheckAuth(),
         home: MatchesScreen(),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('es'),
+        ],
       ),
     );
   }

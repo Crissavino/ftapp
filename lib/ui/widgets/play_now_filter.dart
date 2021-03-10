@@ -468,40 +468,6 @@ class _PlayNowFilterState extends State<PlayNowFilter> {
                 'Ocurrió un error cargar los jugadores!',
               );
             }
-
-            // llenar con lo que devuelve una vez filtrado
-            // UserPositions userPositions = UserPositions(
-            //   goalKeeper: _gkPos,
-            //   defense: _defPos,
-            //   midfielder: _mfPos,
-            //   forward: _forPos,
-            // );
-
-            // bool isMale = _male;
-
-            // final completeUserProfileResponse = await _userRepository.completeUserProfile(
-            //     userPositions,
-            //     userLocationDetails,
-            //     this._userDaysAvailable.daysAvailable,
-            //     isMale
-            // );
-            //
-            // if (completeUserProfileResponse['success'] == true) {
-            //   Navigator.pushReplacementNamed(context, 'matches');
-            //
-            //   BlocProvider.of<CompleteProfileBloc>(context).add(
-            //       ProfileCompletedEvent()
-            //   );
-            // } else {
-            //   BlocProvider.of<CompleteProfileBloc>(context).add(
-            //       ProfileCompleteErrorEvent()
-            //   );
-            //   return showAlert(
-            //     context,
-            //     'Error!',
-            //     'Ocurrió un error al completar el perfil!',
-            //   );
-            // }
           },
           child: Text(
             'Filtrar'.toUpperCase(),

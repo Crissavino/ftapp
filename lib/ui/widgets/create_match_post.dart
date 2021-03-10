@@ -134,6 +134,7 @@ class _CreateMatchPostState extends State<CreateMatchPost> {
 
     Future<bool> _selectDate(BuildContext context) async {
       final DateTime picked = await showDatePicker(
+        locale: Locale('es', 'ES'),
         context: context,
         initialDate: this.selectedDate,
         firstDate: DateTime(2021, this.selectedDate.month),

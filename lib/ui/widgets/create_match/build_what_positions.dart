@@ -104,6 +104,14 @@ class _BuildWhatPositionsState extends State<BuildWhatPositions> {
                       if (!focus && this._goalKeeperController.text.isEmpty) {
                         this._goalKeeperController.text = '0';
                       }
+
+                      if (focus && widget.whatPositions['goalKeeper'] == 0) {
+                        this._goalKeeperController.text = '';
+                      }
+
+                      this._goalKeeperController.selection = TextSelection.fromPosition(
+                          TextPosition(offset: this._goalKeeperController.text.length)
+                      );
                     },
                     child: TextFormField(
                       controller: this._goalKeeperController,
@@ -165,6 +173,14 @@ class _BuildWhatPositionsState extends State<BuildWhatPositions> {
                       if (!focus && this._defenseController.text.isEmpty) {
                         this._defenseController.text = '0';
                       }
+
+                      if (focus && widget.whatPositions['defense'] == 0) {
+                        this._defenseController.text = '';
+                      }
+
+                      this._defenseController.selection = TextSelection.fromPosition(
+                          TextPosition(offset: this._defenseController.text.length)
+                      );
                     },
                     child: TextFormField(
                       controller: this._defenseController,
@@ -226,6 +242,14 @@ class _BuildWhatPositionsState extends State<BuildWhatPositions> {
                       if (!focus && this._midfielderController.text.isEmpty) {
                         this._midfielderController.text = '0';
                       }
+
+                      if (focus && widget.whatPositions['midfielder'] == 0) {
+                        this._midfielderController.text = '';
+                      }
+
+                      this._midfielderController.selection = TextSelection.fromPosition(
+                          TextPosition(offset: this._midfielderController.text.length)
+                      );
                     },
                     child: TextFormField(
                       controller: this._midfielderController,
@@ -285,8 +309,16 @@ class _BuildWhatPositionsState extends State<BuildWhatPositions> {
                   child: Focus(
                     onFocusChange: (focus) {
                       if (!focus && this._forwardController.text.isEmpty) {
-                        this._defenseController.text = '0';
+                        this._forwardController.text = '0';
                       }
+
+                      if (focus && widget.whatPositions['forward'] == 0) {
+                        this._forwardController.text = '';
+                      }
+
+                      this._forwardController.selection = TextSelection.fromPosition(
+                          TextPosition(offset: this._forwardController.text.length)
+                      );
                     },
                     child: TextFormField(
                       controller: this._forwardController,
